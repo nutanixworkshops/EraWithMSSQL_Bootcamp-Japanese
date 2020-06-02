@@ -6,8 +6,6 @@ Deploying MS SQL with Era
 
 **In this lab you will create a MSSQL Software Profile, and use Era to deploy a new MSSQL Database Server.**
 
-
-
 Creating a New MSSQL Database Server
 ++++++++++++++++++++++++++++++++++++
 

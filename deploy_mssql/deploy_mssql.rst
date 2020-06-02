@@ -25,7 +25,7 @@ Manual VM Deployment
 
 #. Fill out the following fields:
 
-   - **Name** - *Initials*-MSSQL
+   - **Name** - *Initials*-MSSQL-Manual
    - **Description** - (Optional) Description for your VM.
    - **vCPU(s)** - 2
    - **Number of Cores per vCPU** - 1
@@ -38,7 +38,7 @@ Manual VM Deployment
       - Select **Add**
 
    - Select **Add New NIC**
-      - **VLAN Name** - *Assigned User VLAN*
+      - **VLAN Name** - *Secondary*
       - Select **Add**
 
 #. Click **Save** to create the VM.
@@ -105,7 +105,8 @@ Manual VM Deployment
 #. Shutdown this VM
 
 .. note::
-   Shutdown of this VM is important - this will not be required any further in this lab. The purpose of building this VM was to demonstrate how hard it is deploy and apply best practices to a MS SQL VM
+   Shutdown of this VM is important - this will not be required any further in this lab. The purpose of building this VM was to demonstrate how hard it is deploy and apply best practices to a MS SQL VM.
+   We can use this VM in performance testing using HammerDB tool
 
 Clone Source MSSQL VM
 +++++++++++++++++++++
