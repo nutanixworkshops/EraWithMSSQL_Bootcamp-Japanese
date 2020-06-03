@@ -49,7 +49,7 @@ Manual VM Deployment
 
    - Click **Next**
    - **Accept** the licensing agreement
-   - Enter **nutanix/4u** as the Administrator password and click **Finish**
+   - Enter an easy to remember password as the Administrator password and click **Finish**
 
 #. Log in to the VM using the Administrator password you configured.
 
@@ -134,7 +134,7 @@ Clone Source MSSQL VM
 #. Log in to the VM (**Cancel** Shutdown Event Tracker):
 
    - **Username** - Administrator
-   - **Password** - Nutanix/4u
+   - **Password** - **Request your Instructor for password**
 
 #. Disable Windows Firewall for all.
 
