@@ -29,6 +29,7 @@
   flow_secure_fiesta/flow_secure_fiesta
   flow_isolate_fiesta/flow_isolate_fiesta
   era_rest_api/era_rest_api
+  hammerdb/hammerdb
 
 .. toctree::
   :maxdepth: 2
