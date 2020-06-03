@@ -172,7 +172,7 @@ Provision Fiesta Web Tier
 
 Manipulating data using **SQL Server Management Studio** is boring. In this section you'll deploy the web tier of the application and connect it to your production database.
 
-#. `Download the Fiesta Blueprint by right-clicking here <https://raw.githubusercontent.com/nutanixworkshops/ts2020/master/db/mssqldeploy/FiestaNoDB.json>`_. This single-VM Blueprint is used to provision only the web tier portion of the application.
+#. `Download the Fiesta Blueprint by right-clicking here <https://raw.githubusercontent.com/nutanixworkshops/EraWithMSSQL/master/db/mssqldeploy/FiestaNoDB.json>`_. This single-VM Blueprint is used to provision only the web tier portion of the application.
 
 #. From **Prism Central > Calm**, select **Blueprints** from the lefthand menu and click **Upload Blueprint**.
 
