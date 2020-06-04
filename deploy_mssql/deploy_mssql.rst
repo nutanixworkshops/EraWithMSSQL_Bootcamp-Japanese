@@ -27,9 +27,9 @@ Manual VM Deployment
 
    - **Name** - *Initials*-MSSQL-Manual
    - **Description** - (Optional) Description for your VM.
-   - **vCPU(s)** - 2
+   - **vCPU(s)** - 8
    - **Number of Cores per vCPU** - 1
-   - **Memory** - 4 GiB
+   - **Memory** - 16 GiB
 
    - Select **+ Add New Disk**
       - **Type** - DISK
@@ -49,7 +49,7 @@ Manual VM Deployment
 
    - Click **Next**
    - **Accept** the licensing agreement
-   - Enter an easy to remember password as the Administrator password and click **Finish**
+   - Enter *Nutanix/4u* as the Administrator password and click **Finish**
 
 #. Log in to the VM using the Administrator password you configured.
 
