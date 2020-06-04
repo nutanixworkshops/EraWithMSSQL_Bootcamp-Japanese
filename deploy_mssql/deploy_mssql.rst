@@ -79,7 +79,7 @@ Manual VM Deployment
 
    - **Enter the Nutanix cluster IP** - *Assigned Nutanix Cluster IP*
    - **Enter the Nutanix user name for...** - admin
-   - **Enter the Nutanix password for "admin"** - emeaX2020!
+   - **Enter the Nutanix password for "admin"** - techX2020!
    - **Enter the Nutanix container name** - Default
 
    .. note::
@@ -134,7 +134,7 @@ Clone Source MSSQL VM
 #. Log in to the VM (**Cancel** Shutdown Event Tracker):
 
    - **Username** - Administrator
-   - **Password** - **Request your Instructor for password**
+   - **Password** - **Nutanix/4u**
 
 #. Disable Windows Firewall for all.
 
@@ -171,7 +171,7 @@ Era is distributed as a virtual appliance that can be installed on either AHV or
 #. Review the configured Networks. If no Networks show under **VLANs Available for Network Profiles**, click **Add**. Select **Secondary** VLAN and click **Add**.
 
    .. note::
-
+      If Secondary Network is already configured please proceed to the next step
       Leave **Manage IP Address Pool** unchecked, as we will be leveraging the cluster's IPAM to manage addresses
 
    .. figure:: images/era_networks_001.png

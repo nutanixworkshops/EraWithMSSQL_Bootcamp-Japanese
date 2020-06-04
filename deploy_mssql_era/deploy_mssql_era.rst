@@ -32,7 +32,7 @@ You've completed all the one time operations required to be able to provision an
    - **Windows License Key** - (Leave Blank)
    - **Administrator Password** - Nutanix/4u
    - **Instance Name** - MSSQLSERVER
-   - **Server Collation** - Default
+   - **Server Collation** - SQL_Latin1_General_CP1_CI_AS
    - **Database Parameter Profile** - DEFAULT_SQLSERVER_INSTANCE_PARAMS
    - **SQL Service Startup Account** - ntnxlab.local\\Administrator
    - **SQL Service Startup Account Password** - nutanix/4u
