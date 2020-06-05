@@ -131,9 +131,23 @@ Rather than deploy an additional Fiesta web server VM, you will update the confi
 
    .. figure:: images/13.png
 
-#. Run sudo sed -i 's/CURRENT_DB_HOST_ADDRESS_VALUE/AAG_LISTENER_IP_ADDRESS_VALUE/g' ~/Fiesta/config/config.js
+#. Run the following command:
 
-#. cat Fiesta/config/config.js to confirm update
+   ::
+
+     sudo sed -i 's/CURRENT_DB_HOST_ADDRESS_VALUE/AAG_LISTENER_IP_ADDRESS_VALUE/g' ~/Fiesta/config/config.js
+
+   .. note::
+
+      An example of the command is here. Use your SQL AAG's listener IP address
+
+      $ sudo sed -i 's/10.38.193.147/10.38.193.215/g' ~/Fiesta/config/config.js
+
+#. cat the config file to confirm update of IP address.
+
+   ::
+
+      cat Fiesta/config/config.js
 
    .. figure:: images/14.png
 
