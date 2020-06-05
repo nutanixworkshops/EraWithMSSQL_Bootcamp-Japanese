@@ -136,7 +136,7 @@ Clone Source MSSQL VM
    - **Username** - Administrator
    - **Password** - **Nutanix/4u**
 
-#. Disable Windows Firewall for all.
+#. **Disable** Windows Firewall for all.
 
 #. Open SQL Server Managment Studio (SSMS), and **Connect** using Windows Authentication.
 
@@ -171,8 +171,10 @@ Era is distributed as a virtual appliance that can be installed on either AHV or
 #. Review the configured Networks. If no Networks show under **VLANs Available for Network Profiles**, click **Add**. Select **Secondary** VLAN and click **Add**.
 
    .. note::
-      If Secondary Network is already configured please proceed to the next step
       Leave **Manage IP Address Pool** unchecked, as we will be leveraging the cluster's IPAM to manage addresses
+
+   .. note::
+      If Secondary network is already configured please proceed to the next step
 
    .. figure:: images/era_networks_001.png
 
@@ -251,6 +253,12 @@ You must meet the following requirements before you register a SQL Server databa
    .. note::
 
       It is also possible to register existing databases on any server, which will also register the database server it is on.
+
+#. Reboot your *Initials*\ -MSSQL VM
+
+   .. note::
+
+      Reboot of this VM is necessary to create a Era software profile. Otherwise the profile might get corrupt and cannot be used to provision new database VMs.
 
 Creating A Software Profile
 +++++++++++++++++++++++++++
