@@ -7,6 +7,16 @@ Performance Testing of MSSQL using HammerDB
 In this bonus lab you will install HammerDB tool and use it to benchmark MSSQL database performance on a given VM
 
 
+Lab Agenda
++++++++++++
+
+#. Test database performance on MS SQL database configured following Best Practices
+
+#. Test database performance on MS SQL database configured without following Best Practices - here all the database files are located in a single OS drive
+
+   .. note::
+      This bonus lab takes between 60 and 90 minutes depending on your familiarity with MS SQL databases.
+
 Install HammerDB
 ++++++++++++++++++++
 
@@ -16,14 +26,14 @@ Install HammerDB
 
 #. Download the HammerDB setup binaries on your VM from `here <http://10.42.194.11/workshop_staging/HammerDB/HammerDB-3.3-Win-x86-64-Setup.exe>`_. (Copy link address)
 
-#. Go to the downloaded location: righ-click on the file and click on Advanced
+#. Go to the downloaded location: righ-click on the file and click on Advanced.
 
 #. Install HammerDB using the instuctions `here <https://www.hammerdb.com/docs/ch01s04.html#d0e166>`_ and make sure to install HammerDB in ``C:`` drive (default).
 
    .. note::
-      If the installation URL doesn't work. Install the **exe** file as you would install any normal windows package. It is as simple as clicking **Next**
+      If the installation URL doesn't work. Install the **exe** file as you would install any normal windows package. It is as simple as clicking **Next**.
 
-#. Once installed, **Close** HammerDB window (if you chose to **Launch HammerDB**)
+#. Once installed, **Close** HammerDB window (if you chose to **Launch HammerDB**).
 
    .. figure:: images/1.png
 
@@ -38,7 +48,7 @@ This will give you an opportunity to learn to use HammerDB tool and prepare you 
 
 #. Enter user name: administrator and *Nutanix/4u* password and click on connect.
 
-#. Go to Windows Explorer and create the the following folders
+#. Go to Windows Explorer and create the the following folders:
 
    ::
 
