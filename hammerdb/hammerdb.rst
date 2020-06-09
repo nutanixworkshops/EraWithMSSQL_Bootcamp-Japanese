@@ -157,7 +157,7 @@ This will give you an opportunity to learn to use HammerDB tool and prepare you 
 #. Take screenshots and send TPM results to prospective customers or use it for your own reference.
 
 
-Database Test 1 (without best practices on SQL)
+Database Test 2 (without best practices on SQL)
 +++++++++++++++++++++++++++++++++++++++++++++++
 
 Let's simulate a scenario where best practices for MS SQL databases are not followed. In this screnario the data and log files for a SQL database is in the same drive.
