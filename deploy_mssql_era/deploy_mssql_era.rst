@@ -6,8 +6,6 @@ Deploying MS SQL with Era
 
 **In this lab you will create a MSSQL Software Profile, and use Era to deploy a new MSSQL Database Server.**
 
-
-
 Creating a New MSSQL Database Server
 ++++++++++++++++++++++++++++++++++++
 
@@ -34,7 +32,7 @@ You've completed all the one time operations required to be able to provision an
    - **Windows License Key** - (Leave Blank)
    - **Administrator Password** - Nutanix/4u
    - **Instance Name** - MSSQLSERVER
-   - **Server Collation** - Default
+   - **Server Collation** - SQL_Latin1_General_CP1_CI_AS
    - **Database Parameter Profile** - DEFAULT_SQLSERVER_INSTANCE_PARAMS
    - **SQL Service Startup Account** - ntnxlab.local\\Administrator
    - **SQL Service Startup Account Password** - nutanix/4u
@@ -172,9 +170,7 @@ Provision Fiesta Web Tier
 
 Manipulating data using **SQL Server Management Studio** is boring. In this section you'll deploy the web tier of the application and connect it to your production database.
 
-
 #. `Download the Fiesta Blueprint by right-clicking here <https://raw.githubusercontent.com/nutanixworkshops/EraWithMSSQL_Bootcamp-Japanese/master/deploy_mssql_era/FiestaNoDB.json>`_. This single-VM Blueprint is used to provision only the web tier portion of the application.
-
 
 #. From **Prism Central > Calm**, select **Blueprints** from the lefthand menu and click **Upload Blueprint**.
 

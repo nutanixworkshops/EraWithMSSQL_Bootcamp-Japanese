@@ -12,6 +12,102 @@ Whereas with a Nutanix cluster and Era, provisioning and protecting a database s
 
 **In this lab you will deploy a Microsoft SQL Server VM, by cloning a source MSSQL VM. This VM will act as a master image to create a profile for deploying additional SQL VMs using Era.**
 
+Manual VM Deployment
+++++++++++++++++++++
+
+#. In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > VMs**.
+
+   .. figure:: images/1-1.png
+
+#. Click **Create VM**.
+
+#. Select your assigned cluster and click **OK**.
+
+#. Fill out the following fields:
+
+   - **Name** - *Initials*-MSSQL-Manual
+   - **Description** - (Optional) Description for your VM.
+   - **vCPU(s)** - 8
+   - **Number of Cores per vCPU** - 1
+   - **Memory** - 16 GiB
+
+   - Select **+ Add New Disk**
+      - **Type** - DISK
+      - **Operation** - Clone from Image Service
+      - **Image** - MSSQL-2016-VM.qcow2
+      - Select **Add**
+
+   - Select **Add New NIC**
+      - **VLAN Name** - *Secondary*
+      - Select **Add**
+
+#. Click **Save** to create the VM.
+
+#. Select your VM and click **Actions > Power On**.
+
+#. Once powered on, click **Actions > Launch Console** and complete Windows Server setup:
+
+   - Click **Next**
+   - **Accept** the licensing agreement
+   - Enter *Nutanix/4u* as the Administrator password and click **Finish**
+
+#. Log in to the VM using the Administrator password you configured.
+
+#. Disable Windows Firewall for all. **Do NOT modify the default keyboard mapping.**
+
+#. Launch **File Explorer** and note the current, single disk configuration.
+
+   .. figure:: images/1-2.png
+
+   .. note::
+
+      Best practices for database VMs involve spreading the OS, SQL binaries, databases, TempDB, and logs across separate disks in order to maximize performance. On non-AHV hypervisors, these disks should be properly spread across multiple disk controllers, as shown in the diagram below.
+
+      .. figure:: images/1-2b.png
+
+      For complete details for tuning SQL Server on Nutanix (including guidance around NUMA, hyperthreading, SQL Server configuration settings, and more), see the `Nutanix Microsoft SQL Server Best Practices Guide <https://portal.nutanix.com/#/page/solutions/details?targetId=BP-2015-Microsoft-SQL-Server:BP-2015-Microsoft-SQL-Server>`_.
+
+#. From the desktop, launch the **01 - Rename Server.ps1** PowerShell script shortcut and fill out the following fields:
+
+   - **Enter the Nutanix cluster IP** - *Assigned Nutanix Cluster IP*
+   - **Enter the Nutanix user name for...** - admin
+   - **Enter the Nutanix password for "admin"** - *your cluster password*
+
+   The script will validate the VM name does not exceed 15 characters and then rename the server to match the VM name.
+
+#. Once VM has rebooted, log in and launch the **02 - Complete Build.ps1** Powershell script shortcut. Fill out the following fields:
+
+   - **Enter the Nutanix cluster IP** - *Assigned Nutanix Cluster IP*
+   - **Enter the Nutanix user name for...** - admin
+   - **Enter the Nutanix password for "admin"** - techX2020!
+   - **Enter the Nutanix container name** - Default
+
+   .. note::
+
+      All fields in the above script are case sensitive.
+
+   This script will setup and create disk drives according to best practices place SQL data files on those drives. The SQL Systems File is placed on the D:\ drive and data and logs files are placed on separate drives.
+
+#. Once VM has rebooted, verify the new disk configuration in **Prism** and **File Explorer**
+
+   .. figure:: images/1-3.png
+
+   .. figure:: images/1-4.png
+
+#. Log in to your *Initials*\ **-MSSQL** VM and launch SQL Server Management Studio from the desktop.
+
+#. Connect using **Windows Authentication** and verify the database server is available, with only system databases provisioned.
+
+   .. figure:: images/1-5.png
+
+   Congratulations, you now have a functioning SQL Server VM. While this process could be further automated through ``acli``, Calm, or REST API calls orchestrated by a third party tool, provisioning only solves a Day 1 problem for databases, and does little to address storage sprawl, cloning, or patch management.
+
+#. Shutdown this VM
+
+.. note::
+   Shutdown of this VM is important - this will not be required any further in this lab. The purpose of building this VM was to demonstrate how hard it is deploy and apply best practices to a MS SQL VM.
+   We can use this VM in performance testing using HammerDB tool
+
 Clone Source MSSQL VM
 +++++++++++++++++++++
 
@@ -38,9 +134,9 @@ Clone Source MSSQL VM
 #. Log in to the VM (**Cancel** Shutdown Event Tracker):
 
    - **Username** - Administrator
-   - **Password** - Nutanix/4u
+   - **Password** - **Nutanix/4u**
 
-#. Disable Windows Firewall for all.
+#. **Disable** Windows Firewall for all.
 
 #. Open SQL Server Managment Studio (SSMS), and **Connect** using Windows Authentication.
 
@@ -75,8 +171,10 @@ Era is distributed as a virtual appliance that can be installed on either AHV or
 #. Review the configured Networks. If no Networks show under **VLANs Available for Network Profiles**, click **Add**. Select **Secondary** VLAN and click **Add**.
 
    .. note::
-
       Leave **Manage IP Address Pool** unchecked, as we will be leveraging the cluster's IPAM to manage addresses
+
+   .. note::
+      If Secondary network is already configured please proceed to the next step
 
    .. figure:: images/era_networks_001.png
 
@@ -155,6 +253,12 @@ You must meet the following requirements before you register a SQL Server databa
    .. note::
 
       It is also possible to register existing databases on any server, which will also register the database server it is on.
+
+#. Reboot your *Initials*\ -MSSQL VM
+
+   .. note::
+
+      Reboot of this VM is necessary to create a Era software profile. Otherwise the profile might get corrupt and cannot be used to provision new database VMs.
 
 Creating A Software Profile
 +++++++++++++++++++++++++++
