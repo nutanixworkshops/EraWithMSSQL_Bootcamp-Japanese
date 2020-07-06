@@ -1,48 +1,47 @@
 .. _aag:
 
 ---------------------------------
-Simplifying Database Availability
+データベースの可用性を簡単化
 ---------------------------------
 
-Up to this point, we have been using Era to create single instance databases. For any real, production database, you would want to use a clustered solution to provide high availability, reducing any chance of downtime for your application or your business. Era supports provisioning and managing Microsoft SQL Server AlwaysOn Availability Group and Oracle RAC clustered databases.
+ここまでは、私たちはEraを使ってシングルインスタンスのデータベースを作成しました。実際の業務用のデータベースについて、あなたは、クラスタのソリューションを使って、高い可用性を提供し、あなたのアプリケーションやビジネスのダウンタイムの可能性を軽減したいと考えるかもしれません。Eraは、Microsoft SQL Server AlwaysOn Availability GroupとOracle RACでクラスタ化したデータベースのプロビジョニングと管理をサポートします。
 
-SQL Server AAG clusters have many moving parts, and deploying a single cluster can easily take several hours or more.
+SQL Server AAG クラスタは、(動作時に)たくさんの動くパーツがあり、シングルクラスタのデプロイは数時間以上かかります。
 
-**In this lab you will clone your existing production SQL Server database to a database cluster and test its availability using the Fiesta app.**
+**このラボでは、あなたの既存の業務用のSQL Server データベース を データベースクラスタにクローンして、Fiesta appを使って可用性をテストします。**
 
-Creating an Era Managed Network
+Eraの管理ネットワークの作成
 +++++++++++++++++++++++++++++++
 
-#. In **Era > Administration > Era Resources**, Review the configured Networks. If the **EraManaged** Network does not show under **VLANs Available for Network Profiles**, click **Add**.
+#. **Era > Administration > Era Resources** において、設定されたネットワークをレビューします。もし、 **EraManaged(Era管理の)** ネットワークが、 **VLANs Available for Network Profiles** 内に表示されないなら、 **Add** をクリックします。
 
    .. figure:: images/3.png
 
-#. Fill out the following fields and click **Add**:
+#. 以下の通り入力して、 **Add** をクリックします。
 
-   .. note:: The network configuration below should roughly match the addressing below.
-       In most cases:
+   .. note:: 以下のネットワーク設定がだいたい以下のアドレスにマッチすべきです。多くのケースにおいて：
 
-       - "Gateway" will be 10.x.x.129
-       - "Subnet Mask" will be 255.255.255.128
-       - "Primary DNS" will be 10.x.x.41
-       - "First Address" will be 10.x.x.220
-       - "Last Address" will be 10.x.x.253
+       - "Gateway" は、 10.x.x.129
+       - "Subnet Mask" は、 255.255.255.128
+       - "Primary DNS" は、 10.x.x.41
+       - "First Address" は、 10.x.x.220
+       - "Last Address" は、 10.x.x.253
 
    - **Select a VLAN** - EraManaged
-   - Select **Manage IP Address Pool**
-   - **Gateway** - *same as Secondary Network*
-   - Select **Verify**
+   - **Manage IP Address Pool** を選択します
+   - **Gateway** - *Secondary Network と同じ*
+   - **Verify** を選択します
    - **Subnet Mask** - 255.255.255.128
-   - **Primary DNS** - 10.x.x.41 *Refer to Network Info Provided by Bootcamps Leader*
+   - **Primary DNS** - 10.x.x.41 *Bootcampのリーダーによって提供されたネットワーク情報を参照します*
    - **DNS Domain** - ntnxlab.local
-   - **First Address** - 10.x.x.220 *Refer to Network Info Provided by Bootcamps Leader*
-   - **Last Address** - 10.x.x.253 *Refer to Network Info Provided by Bootcamps Leader*
+   - **First Address** - 10.x.x.220 *Bootcampのリーダーによって提供されたネットワーク情報を参照します*
+   - **Last Address** - 10.x.x.253 *Bootcampのリーダーによって提供されたネットワーク情報を参照します*
 
    .. figure:: images/4.png
 
-#. In **Era > Profiles > Network**, click **+ Create** to add the **EraManaged** network to a profile.
+#. **Era > Profiles > Network** において、 **+ Create** をクリックし、 **EraManaged(Era管理の)** ネットワークをプロファイルに加えます。
 
-#. Fill out the following fields:
+#. 以下のように入力します。
 
    - **Engine** - Microsoft SQL Server
    - **Name** - ERAMANAGED_MSSQL_NETWORK
@@ -50,29 +49,29 @@ Creating an Era Managed Network
 
    .. figure:: images/5.png
 
-#. Click **Create**.
+#. **Create** をクリックします。
 
 .. _provisioningaag:
 
-Provisioning an AAG
+AAGのプロビジョニング
 +++++++++++++++++++
 
-#. In **Era**, select **Time Machines** from the dropdown menu.
+#. **Era** において、ドロップダウンメニューから **Time Machines** を選択します。
 
-#. Select the Time Machine associated with your production database (e.g. *xyz-fiesta_TM*, NOT *xyz-fiesta2_TM*).
+#. あなたの業務用のデータベース (例えば、 *xyz-fiesta_TM*, *xyz-fiesta2_TM* ではないです) に関連づいたTime Machine を選択ください。
 
-#. Select **Actions > Clone Database > Cluster Database**.
+#. **Actions > Clone Database > Cluster Database** を選択します。
 
-   By default, a clone will be created from the most recent **Point in Time**. Alternatively you can explicitly specify a previous point in time or snapshot.
+   デフォルトでは、クローンは最新の **Point in Time** から作成します。代わりには、過去のポイントインタイムまたはスナップショットを明示的に指定します。
 
-#. Click **Next**.
+#. **Next** をクリックします。
 
    .. figure:: images/6.png
 
-#. Fill out the following fields and click **Next**:
+#. 以下の通り入力し、 **Next** をクリックします。
 
    - **Windows Cluster** - Create New Cluster
-   - **Windows Cluster Name** - *Initials*\ -clusterdb (Cluster Name has a 15 Character limit)
+   - **Windows Cluster Name** - *Initials*\ -clusterdb (Cluster名は15文字の制限があります)
    - **Compute Profile** - CUSTOM_EXTRA_SMALL
    - **Network Profile** - ERAMANAGED_MSSQL_NETWORK
    - **Windows Domain Profile** - NTNXLAB
@@ -85,7 +84,7 @@ Provisioning an AAG
 
    .. figure:: images/7a.png
 
-#. Modify the following default **Topology** fields and click **Next**:
+#. 以下のデフォルトの **Topology** を修正し、 **Next** をクリックします。
 
    - **Always on Availability Group Name** - *Initials*\ -aag
 
@@ -93,45 +92,45 @@ Provisioning an AAG
 
    .. note::
 
-      SQL 2016 and above supports up to 9 secondary replicas.
+      SQL 2016以降は9つのセカンダリのレプリカまでサポートします。
 
-      The **Primary** server indicates which host you want the AAG to start on.
+      **Primary(プライマリ)**  サーバは、どのホストをAAGに起動させるかを指します。
 
-      **Auto Failover** allows the AAG to failover automatically when it detects the **Primary** host is unavailable. This is preferred in most deployments as it requires no additional administrator intervention, allowing for maximum application uptime.
+      **Auto Failover** により、AAGは、 **Primary(プライマリ)** のホストが利用不可であることを検知した際に自動的にフェイルオーバーします。これは多くのデプロイにおいて好まれており、追加の管理者の介入が不要で、最大のアプリケーションの稼働時間を可能にします。
 
-      **Availability Mode** can be configured as either **Synchronous** or **Asynchronous**.
+      **Availability Mode** が **Synchronous(同期)** または **Asynchronous(非同期)** で設定されます。
 
-      - **Synchronous-commit replicas** - Data is committed to both primary and secondary nodes at the same time. This mode supports both **Automatic** and **Manual Failover**.
-      - **Asynchronous-commit replicas** - Data is committed to primary first and then after some time-interval, data is committed to the secondary nodes. This mode only supports **Manual Failover**.
+      - **Synchronous-commit replicas(同期-コミット レプリカ)** - データは同時にプライマリとセカンダリのノードにコミットされます。このモードは **Automatic(自動)** と **Manual(手動)** の **Failover(フェイルオーバー)** の方法をサポートします。
+      - **Asynchronous-commit replicas(非同期-コミット レプリカ)** - データは、はじめにプライマリのノードにコミットされ、インターバル後に、データはセカンダリのノードにコミットされます。このモードは **Manual Failover(手動フェイルオーバー)** のみをサポートします。
 
-      **Readable Secondaries** allows you to offload your secondary read-only workloads from your primary replica, which conserves its resources for your mission critical workloads. If you have mission critical read-workload or the workload that cannot tolerate latency (up to a few seconds), you should run it on the primary.
+      **Readable Secondaries(読み取り可能なセカンダリ)** により、あなたはプライマリのレプリカから読み取り専用のセカンダリのワークロードをオフロードでき、あなたのミッションクリティカルなワークロードのリソースを節約します。もし、ミッションクリティカルな読み取りワークロードや数秒程度しかレイテンシを許容できないワークロードがある場合、プライマリ上でそれを稼働する必要があります。
 
-#. Click **Clone**.
+#. **Clone** をクリックします。
 
    .. figure:: images/9.png
 
-#. Monitor the refresh on the **Operations** page. This operation should take approximately 35 minutes. **You can proceed to the next section while your clustered database servers are provisioned.**
+#. **Operations**  ページ上で更新をモニターします。この操作はおよそ35分かかります。 **あなたのデータベースサーバがプロビジョニングされている間、次のセクションに進みます。**
 
    .. figure:: images/10.png
 
-Configure Fiesta for AAG
+AAGのFiestaの設定
 ++++++++++++++++++++++++
 
-Rather than deploy an additional Fiesta web server VM, you will update the configuration of your existing VM to point to the database cluster.
+追加のFiesta web server VMをデプロイするより、あなたの既存のVMの設定をアップデートして、データベース クラスタにポイントするようにします。
 
-#. In **Era > Databases > Clones**, and select your most recent clone to view the details of the AAG deployment. Note the **Listener IP Address** of the Always on Availability Group.
+#. **Era > Databases > Clones** にて、あなたの最近のクローンを選択して、AAG デプロイの詳細を見ます。Always on Availability Groupの **リスナーのIPアドレス(Listener IP Address)** を確認します。
 
    .. figure:: images/11.png
 
-#. In **Prism Central > Calm > Applications**, select your *Initials*\ **-DevFiesta** deployment. In the **Services** tab, select the **NodeReact** service and click **Open Terminal > Proceed** to open a new tab with an SSH session into the VM.
+#. **Prism Central > Calm > Applications** にて、あなたの *Initials*\ **-DevFiesta** のデプロイを選択します。 **Services** タブにて、 **NodeReact** サービスを選択し、 **Open Terminal > Proceed** をクリックし、VMへのSSHセッションで新しいタブを開きます。
 
    .. figure:: images/12.png
 
-#. Run: cat Fiesta/config/config.js and note the DB_HOST_ADDRESS value.
+#. cat Fiesta/config/config.js を実行し、DB_HOST_ADDRESS の値を確認します。
 
    .. figure:: images/13.png
 
-#. Run the following command:
+#. 以下のコマンドを実行します。
 
    ::
 
@@ -139,11 +138,11 @@ Rather than deploy an additional Fiesta web server VM, you will update the confi
 
    .. note::
 
-      An example of the command is here. Use your SQL AAG's listener IP address
+      コマンド例はここです。あなたのSQL AAGのリスナーのIPアドレスを使用します。
 
       $ sudo sed -i 's/10.38.193.147/10.38.193.215/g' ~/Fiesta/config/config.js
 
-#. cat the config file to confirm update of IP address.
+#. configファイルをcatで実行してIPアドレスの更新を確認します。
 
    ::
 
@@ -151,33 +150,33 @@ Rather than deploy an additional Fiesta web server VM, you will update the confi
 
    .. figure:: images/14.png
 
-#. sudo systemctl restart fiesta
+#. systemctlをsudoで実行してfiestaを再起動します。
 
-Failing A Cluster Server
+クラスタサーバの障害
 ++++++++++++++++++++++++
 
-Time to break stuff!
+壊すときがきました!
 
-#. Open your **Dev Fiesta** web app and make a change such as deleting a store and/or adding additional products to a store.
+#. あなたの **Dev Fiesta** web appを開き、store(ストア)の削除(Delete Store)と追加のproduct(製品)をstoreへ追加(Add New Store)など変更を行います。
 
    .. figure:: images/15.png
 
-#. In **Prism Central > VMs**, power off *Initials*\ **-clusterdb-1** VM.
+#. **Prism Central > VMs** で、 *Initials*\ **-clusterdb-1** VM を電源OFFします。
 
-   .. note:: You can double check which VM is currently the primary member of the AAG by noting which VM currently displays the AAG's Listener IP Address and Windows Cluster IP in Prism Central.
+   .. note:: どのVMが現在プライマリのAAGのメンバであるかダブルチェックします。具体的には、Prism Centralで、どのVMが現在AAGのリスナーIPアドレスとWindows クラスタIPを表示するかを確認します。
 
    .. figure:: images/16.png
 
-#. Refresh **Prism Central** and note that the **Listener** and **Cluster** IP addresses are now assigned to the other **clusterdb** VM.
+#. **Prism Central** を更新し、 **リスナー(Listener)** と **クラスタ(Cluster)** のIPアドレスが他の **clusterdb** VMに割り当てられていることを確認ください。
 
    .. figure:: images/17.png
 
-#. Refresh your **Dev Fiesta** web app and validate data is being displayed properly.
+#. あなたの **Dev Fiesta** web appを更新し、データが適切に表示されているか確認ください。
 
-Takeaways
+重要なポイント
 +++++++++
 
-What are the key things we learned in this lab?
+このラボで学んだ重要なことは何でしょうか。
 
-- Production databases require high levels of availability to prevent downtime
-- Era makes the deployment of complex, clustered databases as easy (and as fast) as single instance databases
+- 業務用のデータベースは、ダウンタイムを防ぐために高いレベルの可用性が必要です。
+- Eraは、シングルインスタンスのデータベースと同じくらい容易に速く複雑なクラスタ化されたデータベースをデプロイできます。

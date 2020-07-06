@@ -1,29 +1,29 @@
 .. _admin_mssqldb:
 
 --------------------------
-DB Administration with Era
+EraでDB管理
 --------------------------
 
-We will now see how to perform normal database admin task with Era.
+Eraで標準のデータベース管理の行い方を見ることができます。
 
-**In this lab you will Administor your MSSQL DB**
+**このラボでは、あなたはあなたのMSSQL DBを管理します**
 
-Register Your Database
+あなたのデータベースを登録します
 ++++++++++++++++++++++
 
-#. In **Era**, select **Databases** from the dropdown menu and **Sources** from the lefthand menu.
+#. **Era** で、ドロップダウンメニューから **Databases** を選択し、左側のメニューから **Sources** を選択します。
 
    .. figure:: images/1.png
 
-#. Click **+ Register** and fill out the following fields:
+#. **+ Register**  をクリックし、以下の通り入力します。
 
    - **Engine** - Microsoft SQL Server
    - **Database is on a Server that is:** - Registered
-   - **Registered Database Servers** - Select your registered *Initials*\ -MSSQL VM
+   - **Registered Database Servers** - あたたの登録された *Initials*\ -MSSQL VM を選択します。
 
    .. figure:: images/2.png
 
-   - **Unregistered Databases** - Select SampleDB
+   - **Unregistered Databases** - SampleDB を選択します。
    - **Database Name in Era** - *Initials*\ -LABSQLDB
 
    .. figure:: images/3.png
@@ -35,27 +35,27 @@ Register Your Database
 
    .. figure:: images/4.png
 
-#. Click **Register**
+#. **Register** をクリックします。
 
-#. Select **Operations** from the dropdown menu to monitor the registration. This process should take approximately 5 minutes.
+#. ドロップダウンメニューから **Operations** を選択し登録をモニターします。このプロセスはおよそ5分かかります。
 
-Snapshot Your Database
+あなたのデータベースのスナップショットを取得
 ++++++++++++++++++++++
 
-Before we take a manual snapshot of our Database, lets write a new table into SampleDB
+あなたのデータベースを手動でスナップショットを取る前、SampleDBに新しいテーブルを書き込みましょう。
 
-Write New Table Into Database
+データベースに新しいテーブルを書き込む
 .............................
 
-#. RDP/Console into your *Initials*\ -MSSQL VM
+#. RDP/Consoleであなたの *Initials*\ -MSSQL VM に接続します。
 
-#. Open SQL Server Managment Studio (SSMS), and **Connect** using Windows Authentication.
+#. SQL Server Managment Studio (SSMS)を開き、Windows認証で **接続** します。
 
-#. Right-Click on **SampleDB** and Select **New Query**.
+#. **SampleDB** を右クリックし、 **New Query** を選択します。
 
    .. figure:: images/5.png
 
-#. **Execute** the following SQL Query:
+#. 以下のSQL Queryを **実行(Execute)** します。
 
    .. code-block:: Bash
 
@@ -63,18 +63,18 @@ Write New Table Into Database
 
    .. figure:: images/6.png
 
-#. Verify the new table is there by doing a refresh on **Tables**.
+#. **Tables** 上でrefreshを行い、新しいテーブルがあるか確認します。
 
-Take Manual Snapshot of Database
+データベースのスナップショットを手動で取る
 ................................
 
-#. In **Era**, select **Databases** from the dropdown menu and **Sources** from the lefthand menu.
+#. **Era** にて、ドロップダウンメニューから **Databases** を選択し、左側のメニューから **Sources** を選択します。
 
-#. Click on the Time Machine for your Database *Initials*\ -MSSQL_TM
+#. あなたのデータベース *Initials*\ -MSSQL_TM のTime Machine をクリックします。
 
    .. figure:: images/7.png
 
-#. Once that is complete, click **Actions > Snapshot**.
+#. 完了後、 **Actions > Snapshot** をクリックします。
 
    .. Figure:: images/8.png
 
@@ -82,16 +82,16 @@ Take Manual Snapshot of Database
 
    .. Figure:: images/9.png
 
-#. Click **Create**
+#. **Create** をクリックします。
 
-#. Select **Operations** from the dropdown menu to monitor the registration. This process should take approximately 2-5 minutes.
+#. ドロップダウンメニューから **Operations** を選択し登録をモニターします。このプロセスはおよそ2-5分かかります。
 
-Clone Your Database Server & Database
+あなたのデータベースサーバとデータベースのクローン
 +++++++++++++++++++++++++++++++++++++
 
-#. In **Era**, select **Time Machines** from the dropdown menu and select *Initials*\ -MSSQL_TM
+#. **Era** にて、ドロップダウンメニューから **Time Machines** を選択し、 *Initials*\ -MSSQL_TM を選択します。
 
-#. Click **Actions > Clone Database > Single Node Database**.
+#. **Actions > Clone Database > Single Node Database** をクリックします。
 
    - **Snapshot** - *Initials*\ -MSSQL-1st-Snapshot (Date Time)
 
@@ -111,43 +111,43 @@ Clone Your Database Server & Database
 
    .. figure:: images/12.png
 
-#. Click **Clone**
+#. **Clone** をクリックします。
 
-#. Select **Operations** from the dropdown menu to monitor the registration. This process should take approximately 30-50 minutes.
+#. ドロップダウンメニューから **Operations** を選択し登録をモニターします。このプロセスはおよそ30-50分かかります。
 
-Delete Table and Clone Refresh
+テーブルの削除とクローンのリフレッシュ
 ++++++++++++++++++++++++++++++
 
-There are times when a table or other data gets deleted (by accident), and you would like to get it back. here we will delete a table and use the Era Clone Refresh action from the last snapshot we took.
+テーブルや他のデータを誤って削除してしまう時があり、あなたはそれを戻したいです。ここでは、テーブルを削除し、最後に取ったスナップショットからEraのクローンリフレッシュを使います。
 
-Delete Table
+テーブルの削除
 ............
 
-#. RDP/Console into your *Initials*\ -MSSQL_Clone1 VM
+#. RDP/Consoleであなたの *Initials*\ -MSSQL_Clone1 VM に接続します。
 
-#. Open SQL Server Managment Studio (SSMS), and **Connect** using Windows Authentication.
+#. SQL Server Managment Studio (SSMS)を開き、Windows認証で **接続** します。
 
-#. Expand **SampleDB_Clone1 > Tables**, Right-Click on **dbo.testlabtable** and Select **Delete** and **OK**.
+#. **SampleDB_Clone1 > Tables** と開き、 **dbo.testlabtable** 上で右クリックし、 **Delete** を選択し **OK** します。
 
-Clone Refresh
+クローンのリフレッシュ
 .............
 
-#. In **Era**, select **Databases** from the dropdown menu and **Clones** from the lefthand menu.
+#. **Era** にて、ドロップダウンメニューから **Databases** を選択し、左側のメニューから **Clones** を選択します。
 
-#. Select the Clone for your Database *Initials*\ -LABSQLDB_Clone1 and Click **Refresh**.
+#. あなたのデータベース  *Initials*\ -LABSQLDB_Clone1 のクローンを選択し、 **Refresh** をクリックします。
 
    - **Snapshot** - *Initials*\ -MSSQL-1st-Snapshot (Date Time)
 
 
-#. Click **Refresh**
+#. **Refresh** をクリックします。
 
-#. Select **Operations** from the dropdown menu to monitor the registration. This process should take approximately 2-5 minutes.
+#. ドロップダウンメニューから **Operations** を選択し登録をモニターします。このプロセスはおよそ2-5分かかります。
 
-Verify Table is Back
+テーブルが戻ったことの確認
 ....................
 
-#. RDP/Console into your *Initials*\ -MSSQL_Clone1 VM
+#. RDP/Consoleであなたの *Initials*\ -MSSQL_Clone1 VM に接続します。
 
-#. Open SQL Server Managment Studio (SSMS), and **Connect** using Windows Authentication.
+#. SQL Server Managment Studio (SSMS)を開き、Windows認証で **接続** します。
 
-#. Expand **SampleDB_Clone1 > Tables**, verify **dbo.testlabtable** is there.
+#. **SampleDB_Clone1 > Tables** と開き、 **dbo.testlabtable** があることを確認します。

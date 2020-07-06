@@ -1,109 +1,109 @@
 .. _dbflow_secure_fiesta:
 
 -------------------------------
-Securing Applications with Flow
+Flowでアプリケーションのセキュリティ向上
 -------------------------------
 
-Flow is an application-centric network security product tightly integrated into Nutanix AHV and Prism Central. Flow provides rich network traffic visualization, automation, and security for VMs running on AHV.
+Flowは、アプリケーションセントリックなネットワークセキュリティ製品で、Nutanix AHVとPrism Centralに統合されています。Flowは、AHV上で稼働するVMについて、豊富なネットワークトラフィックの見える化、自動化、セキュリティを提供します。
 
-Microsegmentation is a component of Flow that uses simple policy-based management to secure VM networking. Using Prism Central categories (logical groups), you can create a powerful distributed firewall. Combining this with Calm allows automated deployment of applications that are secured as they are created.
+マイクロセグメンテーションは、VMネットワークを堅牢にする簡単なポリシーベースの管理を使用するFlowのコンポーネントです。Prism Central の カテゴリ(ロジカルグループ)を使って、あなたは強力な分散ファイアウォールを作成できます。これをCalmに統合して、作成時にセキュリティの高いアプリケーションの自動デプロイができます。
 
-**In this exercise you will restrict access to the Fiesta application and protect traffic between the application tiers.**
+**この演習では、Fiestaアプリケーションへのアクセスを制限し、アプリケーション層内のトラフィックを保護します。**
 
-Securing the Fiesta Application
+Fiesta アプリケーションの堅牢化
 +++++++++++++++++++++++
 
-Flow provides multiple System categories out of the box, such as AppType, AppTier, and Environment, that are used to quickly group virtual machines. Security policies are applied using these categories. Start using these pre-existing categories right away, or add your own categories for custom grouping.
+Flowは革新的な多くのSystemのカテゴリを提供します。例えば、AppType、AppTier、Environmentで、迅速に仮想マシンをグループ化するのに使われます。セキュリティポリシーはこれらのカテゴリを使用するのに適用されます。これらの既存のカテゴリをすぐに使用を開始できます。または、カスタムのグループ用にあなた自身のカテゴリを追加します。
 
-Defining Category Values
+カテゴリの値を定義
 ........................
 
-Prism Central uses categories as metadata to tag VMs to determine how policies will be applied.
+Prism Centralはカテゴリをメタデータとして使用してVMにタグを振り、どのポリシーが適用されるかを決定します。
 
-#. In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > Categories**.
+#. **Prism Central** では、 :fa:`bars` **> Virtual Infrastructure > Categories** を選択します。
 
-#. Select the checkbox for **AppType** and click **Actions > Update**.
+#. **AppType** のチェックボックスを選択し、 **Actions > Update** をクリックします。
 
    .. figure:: images/12.png
 
-#. Click the :fa:`plus-circle` icon beside the last value to add an additional Category value.
+#. 最後の値の側の :fa:`plus-circle` アイコンをクリックします。
 
-#. Specify *Initials*-**Fiesta**  as the value name.
+#. *Initials*-**Fiesta**  をvalue名として指定する。
 
    .. figure:: images/13.png
 
-#. Click **Save**.
+#. **Save** をクリックする。
 
-#. Select the checkbox for **AppTier** and click **Actions > Update**.
+#. **AppTier** のチェックボックスを選択し、 **Actions > Update** をクリックする。
 
-#. Click the :fa:`plus-circle` icon beside the last value to add an additional Category value.
+#. 最後のvalueの側の :fa:`plus-circle` アイコンをクリックして、追加のCategoryのvalueを追加します。
 
-#. Specify *Initials*-**Web**  as the value name. This category will be applied to the application's web tier.
+#. *Initials*-**Web** をvalue名として指定します。このカテゴリはアプリケーションウェブ層に提供されます。
 
-#. Click :fa:`plus-circle` and specify *Initials*-**DB**. This category will be applied to the application's MSSQL database tier.
+#. :fa:`plus-circle` をクリックし、 *Initials*-**DB** を指定します。このカテゴリは、アプリケーションのMSSQLデータベース層に適用されます。
 
    .. figure:: images/14.png
 
-#. Click **Save**.
+#. **Save** をクリックします。
 
-Creating a Security Policy
+セキュリティポリシーの作成
 ..........................
 
-Nutanix Flow includes a policy-driven security framework that uses a workload-centric approach instead of a network-centric approach. Therefore, it can scrutinize traffic to and from VMs no matter how their network configurations change and where they reside in the data center. The workload-centric, network-agnostic approach also enables the virtualization team to implement these security policies without having to rely on network security teams.
+Nutanix Flowは、ネットワークセントリックのアプローチの代わりに、ワークロードセントリックのアプローチを使用するポリシー駆動のセキュリティフレームワークを含みます。そのため、ネットワーク設定の変更の仕方やデータセンター内にそれらが保存される場所に関わらず、VM間のトラフィックを精査します。ワークロードセントリックで、ネットワーク非依存のアプローチにより仮想化チームはセキュリティポリシーをネットワークセキュリティチームに依存せずに実装できます。
 
-Security policies are applied to categories and not to the VMs themselves. Therefore, it does not matter how many VMs are started up in a given category. Traffic associated with the VMs in a category is secured without administrative intervention, at any scale.
+セキュリティポリシーはカテゴリに適用され、VM自身には適用されません。そのため、対象カテゴリ内で起動するVM数は問題ではないです。カテゴリ内のVMに関連するトラフィックは、いかなる規模でも、管理者の介入なしに堅牢化されます。
 
-Create the security policies that will protect the Fiesta application.
+Fiestaアプリケーションを保護するセキュリティポリシーを作成します。
 
-#. In **Prism Central**, select :fa:`bars` **> Policies > Security Policies**.
+#. **Prism Central** において、 :fa:`bars` **> Policies > Security Policies** を選択します。
 
-#. Click **Create Security Policy > Secure Applications (App Policy) > Create**.
+#. **Create Security Policy > Secure Applications (App Policy) > Create** をクリックします。
 
-#. Fill out the following fields:
+#. 以下の通り入力します。
 
    - **Name** - *Initials*-Fiesta
-   - **Purpose** - Restrict unnecessary access to Fiesta
+   - **Purpose** - Fiestaへの不必要なアクセスを制限します
    - **Secure this app** - AppType: *Initials*-Fiesta
-   - Do **NOT** select **Filter the app type by category**.
+   - **Filter the app type by category** を選択しないでください。
 
    .. figure:: images/18.png
 
-#. Click **Next**.
+#. **Next** をクリックします。
 
-#. If prompted, click **OK, Got it!** on the tutorial diagram of the **Create App Security Policy** wizard.
+#. 進める場合は、 **Create App Security Policy** ウィザードのチュートリアルダイアログ上の、 **OK, Got it!** をクリックします。
 
-#. To allow for more granular configuration of the security policy, click **Set rules on App Tiers, instead** rather than applying the same rules to all components of the application.
+#. セキュリティポリシーのさらに詳細な設定を行うには、 **Set rules on App Tiers, instead** をクリックします。同じルールをすべてのアプリケーションのコンポーネントへの適用はあまりしないです。
 
    .. figure:: images/19.png
 
-#. Click **+ Add Tier**.
+#. **+ Add Tier** をクリックします。
 
-#. Select **AppTier:**\ *Initials*-**Web** from the drop down.
+#. ドロップダウンから **AppTier:**\ *Initials*-**Web** を選択します。
 
-#. Repeat Steps 7-8 for **AppTier:**\ *Initials*-**DB**.
+#. **AppTier:**\ *Initials*-**DB** 用にステップ7-8を繰り返します。
 
    .. figure:: images/20.png
 
-   Next you will define the **Inbound** rules, which control which sources you will allow to communicate with your application. You can allow all inbound traffic, or define whitelisted sources. By default, the security policy is set to deny all incoming traffic.
+   次に、 **インバウンド(Inbound)** のルールを定義し、どの制御、どの対象のソースに対して許可を与え、あなたのアプリケーションと通信するかを決めます。全てのインバウンドトラフィックを許可できますし、ホワイトリストの対象のソースを定義することもできます。デフォルトでは、全てのインカミングのトラフィックを拒否するように、セキュリティポリシーがセットされています。
 
-   In this scenario we want to allow inbound TCP traffic to the web tier on TCP port 80 from all clients.
+   このシナリオでは、全てのクライアントからのTCP port 80上のweb層に対するインバウンドTCPトラフィックを許可したいです。
 
-#. Under **Inbound**, click **+ Add Source**.
+#. **Inbound** にて、 **+ Add Source** をクリックします。
 
-#. Fill out the following fields to allow all inbound IP addresses:
+#. 以下を入力して全てのインバウンドのIPアドレスを許可します。
 
-   - **Add source by:** - Select **Subnet/IP**
-   - Specify **0.0.0.0/0**
+   - **Add source by:** - **Subnet/IP** を選択します
+   - **0.0.0.0/0** を指定します
 
    .. note::
 
-     Sources can also be specified by Categories, allowing for greater flexibility as this data can follow a VM regardless of changes to its network location.
+     ソースはCategoriesによっても指定でき、ネットワークの変更に関わらずこの指定はVMを追跡し、ネットワークのさらなる柔軟性を可能にします。
 
-#. To create an inbound rule, select the **+** icon that appears to the left of **AppTier:**\ *Initials*-**Web**.
+#. インバウンドのルールを作るためには、 **AppTier:**\ *Initials*-**Web** の左にある **+** アイコンを選択します。
 
    .. figure:: images/21.png
 
-#. Fill out the following fields:
+#. 以下の通り入力します。
 
    - **Protocol** - TCP
    - **Ports** - 80
@@ -112,170 +112,170 @@ Create the security policies that will protect the Fiesta application.
 
    .. note::
 
-     Multiple protocols and ports can be added to a single rule.
+     たくさんのプロトコルとポートを１つのルールに加えることができます。
 
-#. Click **Save**.
+#. **Save** をクリックします。
 
-   Calm could also require access to the web VM for workflows including scaling out, scaling in, or upgrades. Calm communicates with these VMs via SSH, using TCP port 22.
+   Calmもweb VMへのアクセスを必要とし、スケールアウト、スケールイン、アップグレードを含むワークフローで利用されます。CalmはSSHを通してTCP port22を使って、これらのVMと通信します。
 
-#. Under **Inbound**, click **+ Add Source**.
+#. **Inbound** にて、 **+ Add Source** をクリックします。
 
-#. Fill out the following fields:
+#. 以下の通り入力します。
 
-   - **Add source by:** - Select **Subnet/IP**
-   - Specify *Your Prism Central IP*\ /32
+   - **Add source by:** - **Subnet/IP** を選択します
+   - *あなたのPrism Central IP*\ /32 を指定します
 
    .. note::
 
-     The **/32** denotes a single IP as opposed to a subnet range.
+     **/32** は、サブネットの幅とは異なり、1つのIPを定義します。
 
    .. figure:: images/23.png
 
-#. Click **Add**.
+#. **Add** をクリックします。
 
-#. Select the **+** icon that appears to the left of **AppTier:**\ *Initials*-**Web**, specify **TCP** port **22** and click **Save**.
+#. **AppTier:**\ *Initials*-**Web** の左側にある **+**  アイコンを選択し、 **TCP** port **22** を指定し、 **Save** をクリックします。
 
-#. Repeat Steps 15 through 18 for **AppTier:**\ *Initials*-**DB** allowing the IP address of the Era server to communicate with the database VM on TCP port **1433**.
+#. **AppTier:**\ *Initials*-**DB** に関しステップ15から18を繰り返し、EraサーバのIPアドレスがTCP port  **1433** 上のデータベースと通信できるように許可します。
 
    .. figure:: images/24.png
 
-   By default, the security policy allows the application to send all outbound traffic to any destination. This can be restricted further if required, but for this example let's allow all outbound access.
+   デフォルトでは、セキュリティポリシーによりアプリケーションは全てのアウトバウンド(Outbound)トラフィックをどの送付先にも送ることができます。これは必要に応じて制限できます。しかし、この例に関しては、すべてのアウトバウンドのアクセスを許可しましょう。
 
-#. Under **Outbound**, select **Allow All** from the drop down menu.
+#. **Outbound** にて、ドロップダウンメニューから **Allow All** を選択します。
 
    .. figure:: images/25.png
 
-   Each tier of the application communicates with other tiers and the policy must allow this traffic. Some tiers such as web do not require communication within the same tier.
+   アプリケーションの各層が他の層と通信します。そして、ポリシーはこのトラフィックを許可する必要があります。webのようないくつかの層では他の層との通信を必要としません。
 
-#. To define intra-app communication, click **Set Rules within App**.
+#. イントラのappの通信を定義するために、 **Set Rules within App** をクリックします。
 
    .. figure:: images/27.png
 
-#. Click **AppTier:**\ *Initials*-**Web** and select **No** to prevent communication between VMs in this tier. There is only a single web VM within the tier.
+#. **AppTier:**\ *Initials*-**Web** をクリックし、 **No** を選択して、この層でのVM間の通信を妨げます。層内のシングルのweb VMだけがあります。
 
-#. While **AppTier:**\ *Initials*-**Web** is still selected, click the :fa:`plus-circle` icon to the right of **AppTier:**\ *Initials*-**DB** to create a tier to tier rule.
+#. **AppTier:**\ *Initials*-**Web** がいまだ選択されている間、 :fa:`plus-circle` アイコン をクリックし、 **AppTier:**\ *Initials*-**DB** の右側のアイコンをクリックし、層対層のルールを作成します。
 
-#. Fill out the following fields to allow communication on TCP port **1433** between the web and database tiers:
+#. 以下の通り入力して、webとdetabase層の間のTCP port **1433** 上の通信を許可します。
 
    - **Protocol** - TCP
    - **Ports** - 1433
 
    .. figure:: images/28.png
 
-#. Click **Save**.
+#. **Save** をクリックします。
 
-#. Click **Next** to review the security policy.
+#. **Next** をクリックし、セキュリティポリシーをレビューします。
 
-#. Click **Save and Monitor** to save the policy.
+#. **Save and Monitor** をクリックし、ポリシーを保存します。
 
-Assigning Category Values
+カテゴリの値の割当
 .........................
 
-You will now apply the previously created categories to the VMs provisioned from the Fiesta blueprint. Flow categories can be assigned as part of a Calm blueprint, but the purpose of this exercise is to understand category assignment to existing virtual machines.
+Fiesta blueprintからプロビジョニングしたVMに対して以前作成したカテゴリを適用します。Flow カテゴリはCalm blueprintの一部として割り当てられます。しかし、この演習の目的は、既存の仮想マシンに対するカテゴリ割り当てを理解することです。
 
-#. In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > VMs**.
+#. **Prism Central** において、 :fa:`bars` **> Virtual Infrastructure > VMs** を選択します。
 
-#. Click **Filters** and enter *Your Initials* in the **NAME** field to display your database VM.
+#. **Filters** をクリックし、 *あなたのInitials* を **NAME** の項目に入力して、あなたのデータベース VMを表示します。
 
    .. figure:: images/15.png
 
-#. Using the checkboxes, select the DB VM associated with the application and select **Actions > Manage Categories**.
+#. チェックボックスを使用して、アプリケーションに関連付けられたDB VMを選択し、 **Actions > Manage Categories** を選択します。
 
    .. figure:: images/16.png
 
-#. Type **AppType:**\ *Initials*-**Fiesta** in the search bar and click the :fa:`plus-circle` icon to add a second category.
+#. search barに、 **AppType:**\ *Initials*-**Fiesta** をタイプし、 :fa:`plus-circle` アイコンをクリックして、2番目のカテゴリを加えます。
 
-#. Enter **AppTier:**\ *Initials*-**DB** and select **Save** to apply the categories to the VM.
+#. **AppTier:**\ *Initials*-**DB** を入力して、 **Save** を選択してカテゴリをVMに適用します。
 
    .. figure:: images/16a.png
 
-#. Click **Filters** and enter *Your Initials* in the **Categories** field to display your web VM that is part of the **CalmApplication:\ *XYZ_Fiesta*** category.
+#. **Filters** をクリックし、 **Categories** の項目内に *あなたのイニシャル* を入力して、 **CalmApplication:\ *XYZ_Fiesta*** カテゴリの一部であるweb VMを表示します。
 
    .. figure:: images/16b.png
 
-#. Select your *nodereact* VM, select **Actions > Manage Categories**, specify the **AppTier:**\ *Initials*-**Web** category and click the :fa:`plus-circle` icon to add a second category.
+#. あなたの *nodereact* VMを選択して、 **Actions > Manage Categories** を選択します。 **AppTier:**\ *Initials*-**Web** カテゴリを指定し、 :fa:`plus-circle` アイコンをクリックして2番目のカテゴリを加えます。
 
-#. Enter **AppType:**\ *Initials*-**Fiesta** and click **Save**.
+#. **AppType:**\ *Initials*-**Fiesta** を入力して、 **Save** をクリックします。
 
    .. figure:: images/17.png
 
-#. Finally, Repeat step 7 to assign **Environment:Dev** to your Windows Tools VM.
+#. 最後に、ステップ7を繰り返して、 **Environment:Dev** をあなたのWindows Tools VMに割り当てます。
 
-Monitoring and Applying a Security Policy
+セキュリティポリシーのモニタリングと適用
 +++++++++++++++++++++++++++++++++++++++++
 
-Before applying the Flow policy, you will ensure the Fiesta application is working as expected.
+Flowポリシーを適用する前に、Fiesta アプリケーションは期待通りに機能することを確認します。
 
-Testing the Application
+アプリケーションのテスト
 .......................
 
-#. From **Prism Central > Virtual Infrastructure > VMs**, note the IP address of your **-nodereact...** and **-MSSQL-...** VMs.
+#. **Prism Central > Virtual Infrastructure > VMs** から、あなたの **-nodereact...** and **-MSSQL-...** VMのIPアドレスを確認します。
 
-#. Launch the console for your *Initials*\ **-WinToolsVM** VM.
+#. あなたの *Initials*\ **-WinToolsVM** VM のコンソールを起動します。
 
-#. From the *Initials*\ **-WinToolsVM** console open a browser and access \http://*node-VM-IP*/.
+#. *Initials*\ **-WinToolsVM** コンソールから、ブラウザを開き、http://node-VM-IP/ にアクセスします。
 
-#. Verify that the application loads and that Products can be added and deleted.
+#. アプリケーションがロードし、product(製品)が加えられて削除できることを確認します。
 
    .. figure:: images/30.png
 
-#. Open **Command Prompt** and run ``ping -t MSSQL-VM-IP`` to verify connectivity between the client and database. Leave the ping running.
+#. **コマンドプロンプト(Command Prompt)** を開き、 ``ping -t MSSQL-VM-IP`` を実行し、クライアントとデータベース間で接続を確認します。pingを起動したままにしてください。
 
-#. Open a second **Command Prompt** and run ``ping -t node-VM-IP`` to verify connectivity between the client and web server. Leave the ping running.
+#. 2つ目の **コマンドプロンプト(Command Prompt)** を開き、 ``ping -t node-VM-IP`` を実行し、クライアントとウェブサーバ間の接続を確認します。pingを起動したままにしてください。
 
    .. figure:: images/31.png
 
-Using Flow Visualization
+Flow による見える化
 ........................
 
-#. Return to **Prism Central** and select :fa:`bars` **> Virtual Infrastructure > Policies > Security Policies >**\ *Initials*-**Fiesta**.
+#. **Prism Central** に戻り、 :fa:`bars` **> Virtual Infrastructure > Policies > Security Policies >**\ *Initials*-**Fiesta** を選択します。
 
-#. Verify that **Environment: Dev** appears as an inbound source. The source and line appear in yellow to indicate that traffic has been detected from your client VM.
+#. **Environment: Dev** はインバウンドのソースとして表示されることを確認します。ソースとラインは黄色で表示され、トラフィックがあなたのクライアントVMから検知されたことを示します。
 
    .. figure:: images/32.png
 
-   Are there any other detected outbound traffic flows? Hover over these connections and determine what ports are in use.
+   他に検知されたアウトバウンドトラフィックフローはありますか？これらの接続にカーソルを重ねて、どのポートが使用中か決定します。
 
-#. Click **Update** to edit the policy.
+#. **Update** をクリックし、ポリシーを編集します。
 
    .. figure:: images/34.png
 
-#. Click **Next** and wait for the detected traffic flows to populate.
+#. **Next** をクリックし、検知されたトラフィックフローが投入するのを待ちます。
 
-#. Mouse over the **Environment: Dev** source that connects to **AppTier:**\ *Initials*-**Web** and click the :fa:`check` icon that appears.
+#. **AppTier:**\ *Initials*-**Web** に接続する **Environment: Dev** ソースにマウスを重ねて、表示される :fa:`check` アイコンをクリックします。
 
    .. figure:: images/35.png
 
-#. Click **OK** to complete adding the rule.
+#. **OK** をクリックし、ルールの追加を完了します。
 
-   The **Environment: Dev** source should now turn blue, indicating that it is part of the policy. Mouse over the flow line and verify that both ICMP (ping traffic) and TCP port 80 appear.
+   **Environment: Dev** ソースは青色になるはずで、ポリシーの一部を示します。フローラインにマウスを重ねて、両方のICMP(ping traffic)とTCP port 80が表示されるか確認します。
 
-#. Click **Next > Save and Monitor** to update the policy.
+#. **Next > Save and Monitor** をクリックし、ポリシーを更新します。
 
-Applying Flow Policies
+Flowのポリシーの適用
 ......................
 
-In order to enforce the policy you have defined, the policy must be applied.
+あなたが定義したポリシーを実施するためには、ポリシーが適用されている必要があります。
 
-#. Select *Initials*-**Fiesta**  and click **Actions > Apply**.
+#. *Initials*-**Fiesta** を選択して、 **Actions > Apply** をクリックします。
 
    .. figure:: images/36.png
 
-#. Type **APPLY** in the confirmation dialogue and click **OK** to begin blocking traffic.
+#. 確認ダイアログで **APPLY** をタイプし、 **OK** をクリックしてトラフィックのブロックを開始します。
 
-#. Return to the *Initials*\ **-WinToolsVm** console.
+#. *Initials*\ **-WinToolsVm** コンソールに戻ります。
 
-   What happens to the continuous ping traffic from the Windows client to the database server? Is this traffic blocked?
+   Windowsクライアントからデータベースサーバへの継続的なpingトラフィックで何が起こるでしょうか。このトラフィックはブロックされますか？
 
-#. Verify that the Windows Client VM can still access the Fiesta application using the web browser and the web server IP address.
+#. ウェブブラウザとウェブサーバのIPアドレスを使って、Windows クライアント VMがFiesta アプリケーションにアクセスすることを確認します。
 
-   Can you still add new products under **Products** and update product quantities under **Inventory**?
+   **Products** 内の新しいproductを追加して、 **Inventory** 内のproductの量を更新できますか?
 
-Takeaways
+重要なポイント
 +++++++++
 
-- Microsegmentation offers additional protection against malicious threats that originate from within the data center and spread laterally, from one machine to another.
-- Categories created in Prism Central are available inside Calm blueprints.
-- Security policies leverage the text based categories in Prism Central.
-- Flow can restrict traffic on certain ports and protocols for VMs running on AHV.
-- The policy is created in **Monitor** mode, meaning traffic is not blocked until the policy is applied. This is helpful to learn the connections and ensure no traffic is blocked unintentionally.
+- データセンター内で発生して水平方向にマシンからマシンへ広がる悪意のある脅威に対し、マイクロセグメンテーションは追加の保護を提供します。
+- Prism Centralで作成されたカテゴリはCalm blueprint内で利用可能です。
+- セキュリティポリシーは、Prism Centralにあるテキストベースのカテゴリを利用します。
+- Flowは、AHV上のVMのあるポートとプロトコル上のトラフィックを制限します。
+- ポリシーは **Monitor** モードで作成され、トラフィックがポリシーが適用されるまでブロックされないことを意味します。これは接続を理解し、意図せずブロックされるトラフィックがないことを確認します。
