@@ -1,101 +1,101 @@
 .. _dbflow_isolate_fiesta:
 
 -----------------------------------------
-Isolating Database Environments with Flow
+Flowでデータベース環境を分離
 -----------------------------------------
 
-Isolation policies are used when one group of VMs must be completely blocked from communicating with another group of VMs without any whitelist exceptions. A common example is using isolation policies to block VMs tagged **Environment: Dev** from talking to VMs in **Environment: Production**. Do not use isolation policies if you want to create exceptions between the two groups, instead use an Application Policy which allows a whitelist model.
+分離(isolation)ポリシーは、ホワイトリストの例外なしに他のグループのVMとの通信から1つのグループのVMが完全にブロックする必要がある時に用いられます。よくあるの例は、分離ポリシーを使って、 **Environment: Dev** のタグ付けされたVMを、 **Environment: Production** にあるVMから通信するのをブロックします。2つのグループ間で例外を作成するなら、分離ポリシーを使用しないでください。代わりに、アプリケーションポリシーを使って、ホワイトリストモデルを使います。
 
-**In this exercise you protect the production and development Fiesta applications by creating new environment categories and assigning these to the cloned Fiesta application VMs. Next you will create and implement an isolation security policy that uses the newly created categories to stop the two environments from communicating.**
+**この演習では、新しい環境カテゴリを作成してそれらをクローンされたFiesta アプリケーションVMに割り当てることで、業務用と開発用のFiesta アプリケーションを保護します。次に、分離セキュリティポリシーを作成実装して、新しく作成されたカテゴリを使って２つの環境を通信しないようにします。**
 
-Creating and Assigning Categories
+カテゴリの作成と割当
 +++++++++++++++++++++++++++++++++
 
-#. In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > Categories**.
+#. **Prism Central** において、 :fa:`bars` **> Virtual Infrastructure > Categories** を選択します。
 
-#. Select the checkbox for **Environment** and click **Actions > Update**.
+#. **Environment** のチェックボックスを選択して、 **Actions > Update** をクリックします。
 
-#. Click the :fa:`plus-circle` icon beside the last value to add an additional Category value.
+#. 追加のカテゴリの値を追加するために最後の値の側の :fa:`plus-circle` アイコンをクリックします。
 
-#. Specify *Initials*-**Prod** as the value name to add a production environment category.
+#. *Initials*-**Prod** を値として指定し、業務用環境のカテゴリを追加します。
 
-#. Enter *Initials*-**Dev** to create a development environment category.
+#. *Initials*-**Dev** を入力して開発環境のカテゴリを作成します。
 
    .. figure:: images/37.png
 
-#. Click **Save**.
+#. **Save** をクリックします。
 
-#. In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > VMs**.
+#. **Prism Central** において、 :fa:`bars` **> Virtual Infrastructure > VMs** を選択します。
 
-#. Click **Filters** and search for *Initials*-**MSSQL** in the **NAME** field to display your production and development database virtual machines.
+#. **Filters** をクリックし、 **NAME** の項目にて *Initials*-**MSSQL** を検索し、あなたの業務用と開発用のデーターベースの仮想マシンを表示します。
 
    .. note::
 
-     If you previously created a Label for your application VMs you can also search for that label. Alternatively you can search for the **AppType:** *Initials*-**Fiesta** category from the Filters pane.
+     もしあなたが以前あなたのアプリケーションVM用にラベルを作成したなら、あなたはそのラベルを検索できます。 他には、Filtersペインから **AppType:** *Initials*-**Fiesta** カテゴリを検索できます。
 
    .. figure:: images/38.png
 
-#. Using the checkboxes, select the database VM *Initials*-**MSSQL2** associated with the production application and select **Actions > Manage Categories**.
+#. チェックボックスを使って、業務用アプリケーションと関連している *Initials*-**MSSQL2** のデータベースVMを選択し、 **Actions > Manage Categories** を選択します。
 
-#. Specify **Environment:**\ *Initials*-**Prod** in the search bar and click the **Save** icon to assign the production category to this VM.
+#. search barに **Environment:**\ *Initials*-**Prod** を指定し、 **Save** アイコンをクリックして業務用カテゴリをこのVMに割り当てます。
 
    .. figure:: images/39.png
 
-#. Repeat the previous step to assign **Environment:**\ *Initials*-**Dev** to the development VM *Initials*-**MSSQL2**\_ *date*.
+#. 過去のステップを繰り返して、 **Environment:**\ *Initials*-**Dev** を開発用VM *Initials*-**MSSQL2**\_ *date* に割り当てます。
 
-#. Click **Filters** and search for *Initials*-**_Fiesta** in **CATEGORIES** to display your production web VM.
+#. **Filters** をクリックし、 **CATEGORIES** にある *Initials*-**_Fiesta** を検索し、あなたの業務用web VMを表示します。
 
    .. figure:: images/40.png
 
-#. Using the checkboxes, select the web VM associated with the production application and select **Actions > Manage Categories**.
+#. チェックボックスを使用して、業務用アプリケーションに関連したweb VMを選択し、 **Actions > Manage Categories** を選択します。
 
-#. Specify **Environment:**\ *Initials*-**Prod** in the search bar and click the **Save** icon to assign the category to this VM.
+#. search barに **Environment:**\ *Initials*-**Prod** を指定し、 **Save** アイコンをクリックしてカテゴリをこのVMに割り当てます。
 
-#. Click **Filters** and search for *Initials*-**DevFiesta** in **CATEGORIES** to display your development web VM.
+#. **Filters** をクリックし、 **CATEGORIES** 内の *Initials*-**DevFiesta** を検索し、あなたの開発用web VMを表示します。
 
-#. Specify **Environment:**\ *Initials*-**Dev** in the search bar and click the **Save** icon to assign the category to this VM.
+#. search barに **Environment:**\ *Initials*-**Dev** を指定して、 **Save** アイコンをクリックし、カテゴリをこのVMに割り当てます。
 
-Creating an Isolation Policy
+分離ポリシーの作成
 ++++++++++++++++++++++++++++
 
-#. In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > Policies > Security Policies**.
+#. **Prism Central** において、 :fa:`bars` **> Virtual Infrastructure > Policies > Security Policies** を選択します。
 
-#. Click **Create Security Policy > Isolate Environments (Isolation Policy) > Create**.
+#. **Create Security Policy > Isolate Environments (Isolation Policy) > Create**  をクリックします。
 
-#. Fill out the following fields:
+#. 以下の通り入力します。
 
    - **Name** - *Initials*-Isolate-dev-prod
    - **Purpose** - *Initials* - Isolate dev from prod
    - **Isolate This Category** - Environment:*Initials*Dev
    - **From This Category** - Environment:*Initials*-Prod
-   - Do **NOT** select **Apply this isolation only within a subset of the datacenter**. This option provides additional granularity by only applying to VMs assigned a third, mutual category.
+   - **Apply this isolation only within a subset of the datacenter** を選択しないでください。このオプションで、ポリシーの範囲を制限でき、3番目の相互カテゴリに割り当てられたVMにのみ適用します。
 
    .. figure:: images/41.png
 
-#. Click **Apply Now** to save the policy and begin enforcement immediately.
+#. **Apply Now** をクリックして、ポリシーを保存してください。即座に実行を開始します。
 
-#. Open the production database *Initials*\ **-MSSQL-2** console.
+#. 業務用データベース *Initials*\ **-MSSQL-2** のコンソールを開きます。
 
-   Can you ping the production Fiesta web VM from the production database? What policy blocks this traffic?
+   業務用データベースから業務用のFiesta web VMへpingできますか？どのポリシーがこのトラフィックをブロックしますか？
 
-   Can you ping the development Fiesta web VM from the production database?
+   業務用のデータベースから開発用のFiesta web VMにpingできますか？
 
-   Using these simple policies it is possible to block traffic between groups of VMs such as production and development, to isolate a lab system, or provide isolation for a development and web database.
+   これらのシンプルなポリシーを使って、業務用と開発用のようなVMグループ間のトラフィックをブロックでき、ラボシステムを分離します。つまり、開発とwebデータベースに分離を適用します。
 
-Placing a Policy in Monitor Mode
+Monitorモードでポリシーを導入
 ++++++++++++++++++++++++++++++++
 
-#. In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > Policies > Security Policies**.
+#. **Prism Central** にて、 :fa:`bars` **> Virtual Infrastructure > Policies > Security Policies** を選択します。
 
-#. Select *Initials*-**Isolate-dev-prod** and click **Actions > Monitor**.
+#. *Initials*-**Isolate-dev-prod** を選択し、 **Actions > Monitor** をクリックします。
 
-#. Type **MONITOR** in the confirmation dialogue and click **OK** to disable the policy.
+#. confirmation(確認) ダイアログにて **MONITOR** をタイプし、 **OK** をクリックし、ポリシーを無効にします。
 
-#. Return to the *Initials*\ **-MSSQL2** console and verify the development web VM is accessible using ping from production.
+#. *Initials*\ **-MSSQL2** コンソールに戻ります。開発用 web VMが業務用からpingを使ってアクセスできることを確認します。
 
-Takeaways
+重要なポイント
 +++++++++
 
-- In this exercise you created categories and an isolation security policy with ease without having to alter or change any networking configuration.
-- After tagging the VMs with the categories created, the VMs simply behaved according to the policies they belong to.
-- The isolation policy is evaluated at a higher priority than the application security policy.
+- この演習では、あなたはカテゴリを作成し、容易でネットワーク設定の変更なしに、分離のセキュリティポリシーを作成しました。
+- カテゴリを作成してVMにタグ付けした後、VMは単に属するポリシーに従って動きます。
+- 分離ポリシーは、アプリケーションセキュリティポリシーより高い優先度とみなされます。

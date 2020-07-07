@@ -1,123 +1,122 @@
 .. _deploy_mssql:
 
 ----------------
-Deploying MS SQL
+MS SQLのデプロイ
 ----------------
 
-Traditional database VM deployment resembles the diagram below. The process generally starts with a IT ticket for a database (from Dev, Test, QA, Analytics, etc.). Next one or more teams will need to deploy the storage resources and VM(s) required. Once infrastructure is ready, a DBA needs to provision and configure database software. Once provisioned, any best practices and data protection/backup policies need to be applied. Finally the database can be handed over to the end user. That's a lot of handoffs, and the potential for a lot of friction.
+従来のデータベースVMの導入は以下の絵に似ています。一般的に、プロセスは、(Dev、Test、QA、Analyticsなどからの)データベースのITチケットから始まります。次に、1つ以上のチームが、必要なストレージリソースとVMの導入を行う必要があります。インフラの準備ができると、DBAがデータベースソフトウェアのプロビジョニングと設定を行う必要があります。プロビジョニングすると、ベストプラクティスとデータ保護/バックアップのポリシーを適用する必要があります。最後に、データベースがエンドユーザに渡されます。多くのやりとりがあり、多くの不和を生む可能性があります。
 
 .. figure:: images/0.png
 
-Whereas with a Nutanix cluster and Era, provisioning and protecting a database should take you no longer than it took to read this intro.
+NutanixクラスタとEraでは、データベースのプロビジョニングと保護は、長くてもこのイントロを読む程しかかかりません。
 
-**In this lab you will deploy a Microsoft SQL Server VM, by cloning a source MSSQL VM. This VM will act as a master image to create a profile for deploying additional SQL VMs using Era.**
+**このラボでは、元のMSSQL VMをクローニングすることで、Microsoft SQL Server VMを導入します。このVMは、マスタイメージとして、Eraを使った追加のSQL VMを導入するためのプロファイルの作成に用いられます。**
 
-Manual VM Deployment
+手動でのVMのデプロイ
 ++++++++++++++++++++
 
-#. In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > VMs**.
+#. **Prism Central**で、 :fa:`bars` **> Virtual Infrastructure > VMs** を選択します。
 
    .. figure:: images/1-1.png
 
-#. Click **Create VM**.
+#. **Create VM** をクリックします。
 
-#. Select your assigned cluster and click **OK**.
+#. あなたにアサインされたクラスタを選択し、 **OK** をクリックします。
 
-#. Fill out the following fields:
+#. 以下の通り入力します。
 
    - **Name** - *Initials*-MSSQL-Manual
-   - **Description** - (Optional) Description for your VM.
+   - **Description** - (Optional) あなたのVMの説明。
    - **vCPU(s)** - 8
    - **Number of Cores per vCPU** - 1
    - **Memory** - 16 GiB
 
-   - Select **+ Add New Disk**
+   - **+ Add New Disk** を選択します。
       - **Type** - DISK
       - **Operation** - Clone from Image Service
       - **Image** - MSSQL-2016-VM.qcow2
-      - Select **Add**
+      - **Add** を選択します。
 
-   - Select **Add New NIC**
+   - **Add New NIC** を選択します。
       - **VLAN Name** - *Secondary*
-      - Select **Add**
+      - **Add** を選択します。
 
-#. Click **Save** to create the VM.
+#. **Save** をクリックし、VMを作成します。
 
-#. Select your VM and click **Actions > Power On**.
+#. あなたのVMを選択し、 **Actions > Power On** をクリックします。
 
-#. Once powered on, click **Actions > Launch Console** and complete Windows Server setup:
+#. 電源をONにし、 **Actions > Launch Console** をクリックし、Windows Server setupを完了します。
 
-   - Click **Next**
-   - **Accept** the licensing agreement
-   - Enter *Nutanix/4u* as the Administrator password and click **Finish**
+   - **Next** をクリック
+   - licensing agreementに **Accept**
+   - *Nutanix/4u* を管理者パスワードとして入力し、 **Finish** をクリック
 
-#. Log in to the VM using the Administrator password you configured.
+#. 設定した管理者パスワードを使ってVMにログインします。
 
-#. Disable Windows Firewall for all. **Do NOT modify the default keyboard mapping.**
+#. Windows Firewallを全て無効にします。 **デフォルトのキーボードマッピングを変更しないでください。**
 
-#. Launch **File Explorer** and note the current, single disk configuration.
+#. **ファイルエクスプローラー** を起動し、現在のシングルディスクの設定をメモします。
 
    .. figure:: images/1-2.png
 
    .. note::
 
-      Best practices for database VMs involve spreading the OS, SQL binaries, databases, TempDB, and logs across separate disks in order to maximize performance. On non-AHV hypervisors, these disks should be properly spread across multiple disk controllers, as shown in the diagram below.
+      データベース VMのベストプラクティスは、OS、SQLバイナリ、データベース、TempDB、ログを、異なるディスク上に展開するのに関わります。AHVでないハイパーバイザー上で、下図に示される通り、これらのディスクは適切に複数のディスクコントローラ上に適切に展開されます。
 
       .. figure:: images/1-2b.png
 
-      For complete details for tuning SQL Server on Nutanix (including guidance around NUMA, hyperthreading, SQL Server configuration settings, and more), see the `Nutanix Microsoft SQL Server Best Practices Guide <https://portal.nutanix.com/#/page/solutions/details?targetId=BP-2015-Microsoft-SQL-Server:BP-2015-Microsoft-SQL-Server>`_.
+      Nutanix上でのSQL Serverのチューニングに詳細(NUMA, ハイパースレッディング、SQL Server 設定など)については、 `Nutanix Microsoft SQL Server Best Practices Guide <https://portal.nutanix.com/#/page/solutions/details?targetId=BP-2015-Microsoft-SQL-Server:BP-2015-Microsoft-SQL-Server>`_を参照ください。
 
-#. From the desktop, launch the **01 - Rename Server.ps1** PowerShell script shortcut and fill out the following fields:
+#. デスクトップ上で、PowerShell scriptのショートカット **01 - Rename Server.ps1** を起動し、以下の通り入力します。
 
-   - **Enter the Nutanix cluster IP** - *Assigned Nutanix Cluster IP*
+   - **Enter the Nutanix cluster IP** - *あなたにアサインされたNutanix Cluster IP*
    - **Enter the Nutanix user name for...** - admin
-   - **Enter the Nutanix password for "admin"** - *your cluster password*
+   - **Enter the Nutanix password for "admin"** - *あなたのClusterのパスワード*
 
-   The script will validate the VM name does not exceed 15 characters and then rename the server to match the VM name.
+   スクリプトは、VM名が15文字を超えないことを確認し、サーバ名をVM名に合うように変更します。
 
-#. Once VM has rebooted, log in and launch the **02 - Complete Build.ps1** Powershell script shortcut. Fill out the following fields:
+#. VMのリブート後、ログインし、PowerShell scriptのショートカット **02 - Complete Build.ps1** を起動します。以下の通り入力します。
 
-   - **Enter the Nutanix cluster IP** - *Assigned Nutanix Cluster IP*
+   - **Enter the Nutanix cluster IP** - *あなたにアサインされたNutanix Cluster IP*
    - **Enter the Nutanix user name for...** - admin
    - **Enter the Nutanix password for "admin"** - techX2020!
    - **Enter the Nutanix container name** - Default
 
    .. note::
 
-      All fields in the above script are case sensitive.
+      上述のスクリプトのすべての項目は大文字小文字を区別します。
 
-   This script will setup and create disk drives according to best practices place SQL data files on those drives. The SQL Systems File is placed on the D:\ drive and data and logs files are placed on separate drives.
+   このスクリプトはベストプラクティスに従ってディスクドライブを設定し作成し、これらのドライブ上にSQLのデータファイルを配置します。SQLのシステムファイルは、D:ドライブ上に配置され、データとログファイルは異なるドライブに配置されます。
 
-#. Once VM has rebooted, verify the new disk configuration in **Prism** and **File Explorer**
+#. VMのリブート後、 **Prism** と **File Explorer** で、新しいディスク設定を確認します。
 
    .. figure:: images/1-3.png
 
    .. figure:: images/1-4.png
 
-#. Log in to your *Initials*\ **-MSSQL** VM and launch SQL Server Management Studio from the desktop.
+#. あたたの *Initials*\ **-MSSQL** にログインし、デスクトップからSQL Server Management Studioを起動します。
 
-#. Connect using **Windows Authentication** and verify the database server is available, with only system databases provisioned.
+#. **Windows Authentication** を使って接続し、Systemのデータベースだけがプロビジョニングされて、データベースサーバが利用可能であるか確認します。
 
    .. figure:: images/1-5.png
 
-   Congratulations, you now have a functioning SQL Server VM. While this process could be further automated through ``acli``, Calm, or REST API calls orchestrated by a third party tool, provisioning only solves a Day 1 problem for databases, and does little to address storage sprawl, cloning, or patch management.
+   おめでとうございます。あなたは今機能するSQL Server VMがあります。このプロセスは、acliやCalmや3rdパーティツールからREST APIをコールしたりして、さらに自動化できます。プロビジョニングはデータベースのDay 1の問題を解決し、ストレージ スプロール(無秩序な増加)、クローニングやパッチマネジメントにはほとんど関係ないです。
 
-#. Shutdown this VM
+#. このVMをシャットダウンします。
 
 .. note::
-   Shutdown of this VM is important - this will not be required any further in this lab. The purpose of building this VM was to demonstrate how hard it is deploy and apply best practices to a MS SQL VM.
-   We can use this VM in performance testing using HammerDB tool
+   このVMのシャットダウンは重要で、このラボではこれ以上必要ありません。このVMを立てる目的は、デプロイしてベストプラクティスをMS SQL VMに適用することがいかに大変かを体感することが目的でした。このVMを使って、性能試験をHammerDB toolで行うことができます。
 
-Clone Source MSSQL VM
+元のMSSQL VMをクローン
 +++++++++++++++++++++
 
-#. In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > VMs**.
+#. **Prism Central** で、 :fa:`bars` **> Virtual Infrastructure > VMs** を選択します。
 
    .. figure:: images/1.png
 
-#. Select the checkbox for **Win2016SQLSource**, and click **Actions > Clone**.
+#. **Win2016SQLSource** のチェックボックスを選択し、 **Actions > Clone** をクリックします。
 
-#. Fill out the following fields:
+#. 以下の通り入力します。
 
    - **Number Of Clones** - 1
    - **Name** - *Initials*-MSSQL
@@ -127,72 +126,72 @@ Clone Source MSSQL VM
 
    .. figure:: images/clone_mssql_source.png
 
-#. Click **Save** to create the VM.
+#. **Save** をクリックし、VMを作成します。
 
-#. Select your VM and click **Actions > Power On**.
+#. あなたのVMを選択し、 **Actions > Power On** をクリックします。
 
-#. Log in to the VM (**Cancel** Shutdown Event Tracker):
+#. VMにログインします。(Shutdown Event Trackerで **Cancel** をクリック)
 
    - **Username** - Administrator
    - **Password** - **Nutanix/4u**
 
-#. **Disable** Windows Firewall for all.
+#. Windowsファイアウォールを全て **無効** にします。
 
-#. Open SQL Server Managment Studio (SSMS), and **Connect** using Windows Authentication.
+#. SQL Server Managment Studio (SSMS)を開き、Windows認証で **接続** します。
 
-#. Verify you can browse the **SampleDB**.
+#. **SampleDB** をブラウズして確認します。
 
-Exploring Era Resources
+Eraのリソースの確認
 +++++++++++++++++++++++
 
-Era is distributed as a virtual appliance that can be installed on either AHV or ESXi. For the purposes of conserving memory resources, a shared Era server has already been deployed on your cluster.
+Eraは、AHVまたはESXi上でインストールされる仮想アプライアンスとして分散されています。メモリリソースを節約するために、共有のEraサーバが既にあなたのクラスタ上にデプロイされています。
 
 .. note::
 
-   If you're interested, instructions for the brief installation of the Era appliance can be found `here <https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Era-User-Guide-v12:era-era-installing-on-ahv-t.html>`_.
+   もし興味があれば、 `ここに <https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Era-User-Guide-v12:era-era-installing-on-ahv-t.html>`_、Eraアプライアンスの簡単な導入ガイドがあります。
 
-#. In **Prism Central > VMs > List**, identify the IP address assigned to the **EraServer-\*** VM using the **IP Addresses** column.
+#. **Prism Central > VMs > List** で、IPアドレスの列で、 **EraServer-\*** にアサインされる **IP Addresses** と特定します。
 
-#. Open \https://*ERA-VM-IP:8443*/ in a new browser tab.
+#. 新しいブラウザタブで、 \https://*ERA-VM-IP:8443*/ を開きます。
 
-#. Login using the following credentials:
+#. 以下の認証情報でログインします。
 
    - **Username** - admin
    - **Password** - nutanix/4u
 
-#. From the **Dashboard** dropdown, select **Administration**.
+#. **Dashboard** のドロップダウンから、 **Administration** を選択します。
 
-#. Under **Cluster Details**, note that Era has already been configured for your assigned cluster.
+#. **Cluster Details** において、あなたのアサインされたクラスタにEraが既に設定されていることを確認ください。
 
    .. figure:: images/6.png
 
-#. Select **Era Resources** from the left-hand menu.
+#. 左側メニューから **Era Resources** を選択ください。
 
-#. Review the configured Networks. If no Networks show under **VLANs Available for Network Profiles**, click **Add**. Select **Secondary** VLAN and click **Add**.
-
-   .. note::
-      Leave **Manage IP Address Pool** unchecked, as we will be leveraging the cluster's IPAM to manage addresses
+#. 設定されたネットワークを確認ください。もし、 **VLANs Available for Network Profiles** にネットワークが表示されていないとき、 **Add** をクリックください。 **Secondary** VLANを選択し、 **Add** をクリックください。
 
    .. note::
-      If Secondary network is already configured please proceed to the next step
+      クラスタのIPAMを利用してアドレスを管理するので、 **Manage IP Address Pool** のチェックははずしたままにしてください。
+
+   .. note::
+      Secondary networkが既に設定されるなら、次のステップに進んでください。
 
    .. figure:: images/era_networks_001.png
 
-#. From the dropdown menu, select **SLAs**.
+#. ドロップダウンメニューから、 **SLAs** を選択ください。
 
    .. figure:: images/7a.png
 
-   Era has five built-in SLAs (Gold, Silver, Bronze, Zero, and Brass). SLAs control how the database server is backed up. This can be with a combination of Continuous Protection, Daily, Weekly Monthly and Quarterly protection intervals.
+   Eraはビルトインの5つのSLA(Gold, Silver, Bronze, Zero, Brass)があります。SLAはデータベースサーバのバックアップの仕方を制御します。継続的な保護、日次、週次、月次、四半期の保護の間隔の組み合わせで行われます。
 
-#. From the dropdown menu, select **Profiles**.
+#. ドロップダウンメニューから、 **Profiles** を選択します。
 
-   Profiles pre-define resources and configurations, making it simple to consistently provision environments and reduce configuration sprawl. For example, Compute Profiles specifiy the size of the database server, including details such as vCPUs, cores per vCPU, and memory.
+   Profilesはリソースと設定を事前定義し、一貫性のあるプロビジョニング環境をシンプルにし、設定のスプロール(無秩序な増加)を減らします。例えば、Compute Profileはデータベースサーバのサイズを指定し、vCPU、core per vCPU、memoryのような詳細も含みます。
 
-#. If you do not see any networks defined under **Network**, click **+ Create**.
+#. もし **Network** 内に定義されたネットワークがないなら、 **+ Create** をクリックします。
 
    .. figure:: images/8.png
 
-#. Fill out the following fields and click **Create**:
+#. 以下のように入力し、 **Create** をクリックします。
 
    - **Engine** - Microsoft SQL Server
    - **Name** - Primary-MSSQL-NETWORK
@@ -200,90 +199,90 @@ Era is distributed as a virtual appliance that can be installed on either AHV or
 
    .. figure:: images/9.png
 
-Registering Your MSSQL VM
+あなたのMSSQL VMの登録
 +++++++++++++++++++++++++
 
-Registering a database server with Era allows you to deploy databases to that resource, or to use that resource as the basis for a Software Profile.
+Eraにデータベースサーバを登録して、データベースをリソースにデプロイでき、また、そのリソースをSoftware Profileのベースとして使用することができます。
 
-You must meet the following requirements before you register a SQL Server database with Era:
+EraでSQL Server databaseを登録する前、以下の前提条件を満たす必要があります。
 
-- A local user account or a domain user account with administrator privileges on the database server must be provided.
-- Windows account or the SQL login account provided must be a member of sysadmin role.
-- SQL Server instance must be running.
-- Database files must not exist in C:\ Drive.
-- Database must be in an online state.
-- Windows remote management (WinRM) must be enabled
+- ローカルユーザアカウント、または、管理者権限のドメインユーザアカウントが必要です。
+- WindowsアカウントまたはSQLログインアカウントはsysadminロールのメンバーである必要があります。
+- SQL Serverインスタスはrunningの状態である必要があります。
+- データベースファイルは、C:ドライブ上に配置してはいけない。
+- データベースはオンラインの状態である必要があります。
+- Windows remote management (WinRM)は有効にする必要があります。
 
 .. note::
 
-   Your *XYZ*\ **-MSSQL** VM meets all of these criteria.
+   あなたの *XYZ*\ **-MSSQL** は全てのこれらの基準を満たします。
 
-#. In **Era**, select **Database Servers** from the dropdown menu and **List** from the lefthand menu.
+#. **Era** において、ドロップダウンメニューから **Database Servers** を選択し、左側メニューから **List** を選択します。
 
    .. figure:: images/11.png
 
-#. Click **+ Register** and fill out the following fields:
+#. **+ Register** をクリックし、以下を入力します。
 
    - **Engine** - Microsoft SQL Server
    - **IP Address or Name of VM** - *Initials*\ -MSSQL
    - **Windows Administrator Name** - Administrator
    - **Windows Administrator Password** - Nutanix/4u
-   - **Instance** - MSSQLSERVER (This should auto-populate after providing credentials)
+   - **Instance** - MSSQLSERVER (これは認証情報を提供後、自動入力されます)
    - **Connect to SQL Server Admin** - Windows Admin User
    - **User Name** - Administrator
 
    .. note::
 
-      If **Instance** does not automatically populate, disable the Windows Firewall in your *XYZ*\ **-MSSQL** VM.
+      もし、 **Instance** が自動入力されないなら、あなたの *XYZ*\ **-MSSQL** のWindows Firewallを無効にしてください。
 
    .. figure:: images/12.png
 
    .. note::
 
-    You can click **API Equivalent** for many operations in Era to enter an interactive wizard providing JSON payload based data you've input or selected within the UI, and examples of the API call in multiple languages (cURL, Python, Golang, Javascript, and Powershell).
+    Eraにおける多くの操作のための **API Equivalent** をクリックし、インタラクティブなウィザードを入力します。この際、UI内で入力または選択したJSONのペイロードベースのデータや多くの言語(cURL, Python, Golang, Javascript, and Powershell)でのAPIコールのサンプルを提供します。
 
     .. figure:: images/17.png
 
-#. Click **Register** to begin ingesting the Database Server into Era.
+#. **Register** をクリックし、Database ServerをEraに取り込み始めます。
 
-#. Select **Operations** from the dropdown menu to monitor the registration. This process should take approximately 5 minutes.
+#. ドロップダウンメニューから **Operations** を選択し登録をモニターします。このプロセスはおよそ5分かかります。
 
    .. figure:: images/13.png
 
    .. note::
 
-      It is also possible to register existing databases on any server, which will also register the database server it is on.
+      あるサーバ上の既存のデータベースを登録することもでき、そのデータベースサーバを登録することもできます。
 
-#. Reboot your *Initials*\ -MSSQL VM
+#. あなたの *Initials*\ -MSSQL VM をリブートします。
 
    .. note::
 
-      Reboot of this VM is necessary to create a Era software profile. Otherwise the profile might get corrupt and cannot be used to provision new database VMs.
+      このVMのリブートはEraのsoftware profileを作成するのに必要です。さもなければ、profileは壊れる可能性があり、新しいデータベースVMをプロビジョンするのに使用できません。
 
-Creating A Software Profile
+Software Profileの作成
 +++++++++++++++++++++++++++
 
-Before additional SQL Server VMs can be provisioned, a Software Profile must first be created from the database server VM registered in the previous step. A software profile is a template that includes the SQL Server database and operating system. This template exists as a hidden, cloned disk image on your Nutanix storage.
+追加のSQL Server VMがプロビジョンされる前、Software Profileは、まず、前のステップで登録されたdatabase server VMから作成する必要があります。Software Profileは、SQL Server databaseとoperating systemを含むテンプレートです。このテンプレートは、あなたのNutanixストレージ上で隠れてクローンされたディスクイメージとして存在します。
 
-#. Select **Profiles** from the dropdown menu and **Software** from the lefthand menu.
+#. ドロップダウンメニューから **Profiles** を選択し、左側のメニューから **Software** を選択します。
 
    .. figure:: images/14.png
 
-#. Click **+ Create** and fill out the following fields:
+#. **+ Create** をクリックし、以下の通り入力します。
 
    - **Engine** - Microsoft SQL Server
    - **Name** - *Initials*\ _MSSQL_2016
    - **Description** - (Optional)
-   - **Database Server** - Select your registered *Initials*\ -MSSQL VM
+   - **Database Server** - あなたの登録された *Initials*\ -MSSQL VM を選択ください。
 
    .. figure:: images/15.png
 
-#. Click **Create**.
+#. **Create** をクリックします。
 
-#. Select **Operations** from the dropdown menu to monitor the registration. This process should take approximately 5 minutes.
+#. ドロップダウンメニューから **Operations** を選択し登録をモニターします。このプロセスはおよそ5分かかります。
 
    .. figure:: images/16.png
 
    .. note::
 
-       If creating a profile from a not-cleanly shutdown server it may be corrupt or may not provision successfully. Please ensure that the DBServer had a clean shutdown and clean startup before registering profile to Era.
+       適切にシャットダウンしていないサーバからProfileを作成する場合、そのProfileは壊れていて、うまくプロビジョニングできない可能性があります。profileをEraに登録する前に、DBServerは適切にシャットダウンし適切に起動するようにしてください。
