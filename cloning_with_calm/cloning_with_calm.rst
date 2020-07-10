@@ -1,84 +1,79 @@
 .. _cloning:
 
 -------------------------------
-Time Machine, Cloning, and APIs
+タイムマシン、クローニング、API
 -------------------------------
 
-Copy Data Management, or database cloning, is a critical Day 2 database operation, with multiple teams including developers, QA, analysts, and others requesting non-production instances. As previously discussed, all of these clones can lead to tremendous storage capacity utilization. This is made worse by the constant need for these instances to be updated with up-to-date production data.
+コピーデータマネジメント、すなわち、データベースクローニングは、クリティカルなDay 2 オペレーションで、Dev,QA,分析者などを含む多くのチームが業務と関係ないインスタンスを要求します。既に議論したように、すべてのこれらのクローンは非常に多くのストレージ容量の使用を伴います。最新の業務データに更新されるこれらのインスタンスは絶えず必要なのでさらに悪化します。
 
-Era provides Time Machines to simplify cloning operations. Time Machines capture and maintain snapshots and transactional logs of your source databases as defined in the schedule. For every source database you register with Era, a Time Machine is created for that source database. You create clones and refresh clones either to a point in time (by using transactional logs) or by using snapshots.
+Eraはタイムマシンを提供しクローン操作を単純化します。タイムマシンは、スケジュールで定義された通り、元のデータベースのスナップショットとトランザクションログを取得・管理します。Eraに登録する、元の各データーベースについて、タイムマシンはその元のデータベース用に作成されます。あなたはクローンを作成し、(トランザクションログの使用による)ポイントインタイムまで、または、スナップショットを使って、クローンをリフレッシュします。
 
-**In this lab you will use Era to create a clone of your SQL Server database to be used as part of a test environment. After making changes to your production database, you will refresh your test environment.**
+**このラボでは、Eraを使って、テスト環境の一部として使用される、あなたのSQL Server databaseのクローンを作成します。あなたの業務用のデーターベースに変更が行われる後、あなたはテスト環境を更新します。**
 
-Cloning from the Era UI
+Era UIからクローニング
 +++++++++++++++++++++++
 
-In this exercise you will explore the workflow for cloning a database through the Era web interface. **At the end of this exercise you will NOT click Clone to begin the cloning process, you will instead create the clone programmatically in the next exercise. This exercise is simply to show the UI workflow.**
+この演習では、Eraのウェブインターフェースを通して、データベースをクローンするワークフローを見てみます。 **この演習の最後で、クローニングのプロセスを始めるために、Cloneをクリックしません。代わりに、次の演習では、クローンをプログラマティックに作成します。この演習は単純でUIワークフローをお見せします。**
 
-#. In **Era**, select **Time Machines** from the dropdown menu.
+#. **Era** において、ドロップダウンメニューから **Time Machines** を選択します。
 
-#. Select the Time Machine associated with your production database (e.g. *xyz-fiesta_TM*).
+#. あなたの業務用のデータベース (例えば、 *xyz-fiesta_TM*) に関連付けされたTime Machineを選択します。
 
-.. #. Before cloning our database, we want to ensure a snapshot has been taken representative of the data you imported into your database in the previous exercise. Select **Actions > Snapshot**.
+#. **Actions > Clone Database > Single Node Database** を選択します。
 
-.. #. Provide a **Snapshot Name** and click **Create**.
+   デフォルトでは、クローンは最新のポイントインタイムから作成します。代わりに、過去のポイントインタイムまたはスナップショットを明示的に指定することもできます。
 
-#. Select **Actions > Clone Database > Single Node Database**.
-
-   By default, a clone will be created from the most recent **Point in Time**. Alternatively you can explicitly specify a previous point in time or snapshot.
-
-#. Click **Next**.
+#. **Next**  をクリックします。
 
    .. figure:: images/1.png
 
-   Databases can be cloned to a brand new server which will be automatically provisioned by Era, or as an additional database on an existing server.
+   データベースは、Eraで自動プロビジョニングされる新しいサーバにクローンされるか、または、既存のサーバ上に追加のデータベースとしてクローンされます。
 
-#. Make the following selections and click **Next**:
+#. 以下の選択を行い、 **Next** をクリックします。
 
    - **Database Server** - Create New Server
    - **Database Server Name** - *Default*
    - **Compute Profile** - CUSTOM_EXTRA_SMALL
    - **Network Profile** - Primary-MSSQL_NETWORK
    - **Administrator Password** - nutanix/4u
-   - Select **Join Domain**
+   - **Join Domain** を選択します。
    - **Windows Domain Profile** - NTNXLAB
    - **Domain User Account** - ntnxlab.local\\Administrator
 
    .. figure:: images/2.png
 
-#. **DO NOT CLICK CLONE**. Select **API Equivalent**.
+#. **Cloneをクリックしないでください。** **API Equivalent (API相当) ** を選択ください。
 
-#. Review the **JSON Data** and example **Script** presented by the Era UI for programmatically generating a database clone based on your inputs.
+#. あなたの入力に基づいて、プログラマティックにデータベースクローンを生成するための、Era UIによって提示される **JSON Data** と サンプル **スクリプト(Script)** をレビューします。
 
    .. figure:: images/3.png
 
-#. Click **Close** and then click **X** to close the Clone Database wizard.
+#. **Close** をクリックし、 **X** をクリックして、Clone Database ウィザードを終了します。
 
-Cloning from Calm
+Calmからのクローニング
 +++++++++++++++++
 
-Databases aren't applications, they can be comprised of multiple components. For this dev/test workflow, we'll leverage Calm to spin up a development copy of our Fiesta web tier, and call on Era to provision a clone of the production database programmatically.
+データベースはアプリケーションではなく、多くのコンポーネントから構成されます。このdev/testワークフローについて、我々はCalmを利用し、Fiesta web層の開発コピーを行います。そして、Eraを呼び出し、プログラマティックに業務用データベースのクローンをプロビジョニングします。
 
+#. `ここを右クリックしてFiesta Blueprintをダウンロードします。 <https://raw.githubusercontent.com/nutanix-japan/EraWithMSSQL_Bootcamp-Japanese/master/cloning_with_calm/FiestaClonedDB.json>`_
 
-#. `Download the FiestaClonedDB Blueprint by right-clicking here <https://raw.githubusercontent.com/nutanix-japan/EraWithMSSQL_Bootcamp-Japanese/master/cloning_with_calm/FiestaClonedDB.json>`_.
+#. **Prism Central > Calm** から、左側メニューの **Blueprints** を選択し、 **Upload Blueprint** をクリックします。
 
-#. From **Prism Central > Calm**, select **Blueprints** from the lefthand menu and click **Upload Blueprint**.
+#. **FiestaClonedDB.json** を選択します。
 
-#. Select **FiestaClonedDB.json**.
+#. **Blueprint Name** を更新してあなたのイニシャルを含めてください。
 
-#. Update the **Blueprint Name** to include your initials.
-
-#. Select your Calm project and click **Upload**.
+#. あなたのCalmプロジェクトを選択して、 **Upload** をクリックください。
 
    .. figure:: images/4.png
 
-#. In order to launch the Blueprint you must first assign a network to the VM. Select the **NodeReact** Service, and in the **VM** Configuration menu on the right, select **Primary** as the **NIC 1** network.
+#. Blueprintを起動するために、あなたはまずネットワークをVMに割り当てる必要があります。 **NodeReact** サービスを選択し、右側の **VM** Configuration メニューで、 **Primary** を **NIC 1** のネットワークとして選択します。
 
    .. figure:: images/5.png
 
-#. Click **Credentials** to define a private key used to authenticate to the CentOS VM that will be provisioned by the Blueprint.
+#. **Credentials** をクリックし、BlueprintによってプロビジョニングされるCentOS VMへの認証に使用される秘密鍵を定義します。
 
-#. Expand the **CENTOS** credential and use your preferred SSH key, or paste in the following value as the **SSH Private Key**:
+#. **CENTOS** credentialを開いて、あなたの希望するSSHの鍵を使用します。または、以下の値を **SSHの秘密鍵(Private Key)** としてペーストください。
 
    ::
 
@@ -110,79 +105,79 @@ Databases aren't applications, they can be comprised of multiple components. For
      gmznERCNf9Kaxl/hlyV5dZBe/2LIK+/jLGNu9EJLoraaCBFshJKF
      -----END RSA PRIVATE KEY-----
 
-#. Expand the **era_creds** credential and provide the **Era** password.
+#. **era_creds** のcredential(認証情報)を開いて、 **Era** のパスワードを入力します。
 
    .. figure:: images/6.png
 
-#. Click **Save** and click **Back** once the Blueprint has completed saving.
+#. **Save**  をクリックし、Blueprintの保存が完了すると、 **Back** をクリックします。
 
-#. Click **Launch** and fill out the following fields:
+#. **Launch** をクリックし、以下のように入力します。
 
    - **Name of the Application** - XYZ-DevFiesta
-   - **cloned_db_name** - *Leaving this value blank will create a new Database Server based on the name of the source database being cloned*
+   - **cloned_db_name** - *この値を空白のままにすると、クローンされる元のデータベース名に基づいて新しいデータベースサーバを作成します*
    - **db_dialect** - mssql
    - **db_domain_name** - ntnxlab.local
    - **db_password** - nutanix/4u
    - **db_username** - Administrator
-   - **era_ip** - *IP address of your assigned Era server*
-   - **source_db_name** - *The Era database to be cloned (NOT the Time Machine name)*
+   - **era_ip** - *あなたにアサインされたEra サーバのIPアドレス*
+   - **source_db_name** - *クローンされるEra データベース (Time Machine名ではないです)*
 
    .. note::
 
-      Variables may show up in a different order than displayed in the lab, be sure you are putting the correct information in the appropriate fields.
+      パラメータはラボで表示されるものと異なる順序で表示されるかもしれません。適切な項目に正しい情報を入力するようにしてください。
 
    .. figure:: images/7.png
 
-#. Click **Create**.
+#. **Create** をクリックします。
 
-#. Select the **Audit** tab to monitor the deployment. Note that the NodeReact VM is provisioned in parallel to the database clone, but the package installation on the NodeReact VM will not take place until after cloning completes, as the web tier is dependent on database availability.
+#. **Audit** タブを選択してデプロイをモニターします。NodeReact VMは、データベースのクローンと並行してプロビジョニングされることを確認ください。ただし、web層はデータベースが利用可能かに依存するので、NodeReact VMのパッケージインストールはクローニングが完了するまで起こりません。
 
    .. figure:: images/8.png
 
-   You can also monitor progress of the database clone through the **Era > Operations** page.
+   **Era > Operations** ページでデータベースクローンの進捗をモニターできます。
 
    .. figure:: images/9.png
 
-   This process should complete in ~25 minutes.
+   このプロセスは25分以下で完了します。
 
-#. While the clone operation is taking place, use this as an opportunity to further explore this Blueprint. Return to the Blueprint and select the **DBClone** service. Note in the **VM** Configuration panel that Calm is not deploying a virtual machine, but rather taking advantage of the **Existing Machine** setting.
+#. クローン操作が行われている間、これを機会と思って、もっとBlueprintを見てみましょう。Blueprintへ戻って、 **DBClone** サービス選択ください。 **VM** Configurationパネルを見てください。Calmは仮想マシンをデプロイしておらず、むしろ **既存のマシン(Existing Machine)** の設定を利用しています。
 
    .. figure:: images/10.png
 
-#. Under **Services > DBClone > VM > Pre-create**, note the scripts that are run to connect to the Era instance, obtain the necessary information required to create the clone, based on the **source_db_name** defined as a runtime variable.
+#. **Services > DBClone > VM > Pre-create** の下で、Era インスタンスに接続するために起動しているスクリプトをみてください。ランタイム変数で定義されている **source_db_name** に基づいて、クローンを作成するのに必要な情報を得ます。
 
    .. figure:: images/11.png
 
-#. Select the **5CloneDb** task and maximize the **Script** field. Note that the JSON **payload** in this script is what was provided by the Era UI in the previous exercise.
+#. **5CloneDb** タスクを選択して、 **スクリプト(Script)** のフィールドを最大化にします。 このスクリプト上のJSONの **ペイロード(payload)** は前の演習でEra UIによって提供されたものであることを確認ください。
 
    .. figure:: images/12.png
 
-   Following this script, the **6MonitorOperation** polls Era to determine whether or not the clone operation has successfully completed. Once the clone is complete, the **CLONE_SERVER_IP** can be determined and assigned to the **CloneDb** service.
+   このスクリプトの後、 **6MonitorOperation** はEraにポーリングしてクローン操作が成功して完了したかどうかを決めます。 クローンが完了すると、 **CLONE_SERVER_IP** が決まって、 **CloneDb** サービスにアサインされます。
 
-#. Under **Services > NodeReact > Package > Install**, note the scripts that are run to install the required software for the Fiesta application and configure the database connection.
+#. **Services > NodeReact > Package > Install** にて、Fiestaアプリケーションに必要なソフトウェアをインストールしてデータベース接続を設定するために実行しているスクリプトをみてください。
 
    .. figure:: images/13.png
 
-#. Select the **ConfApp** task and maximize the script field. Can you spot how the app is being configured to use the IP address of the database server cloned by Era?
+#. **ConfApp** タスクを選択し、スクリプトのフィールドを最大化します。EraでクローンされたデータベースサーバのIPアドレスを使用するためにどのようにappが設定されているか考えてみてください。
 
    .. figure:: images/14.png
 
-#. In Calm, once the application status changes to **Running**, select the **Services** tab and select the **NodeReact** service to obtain the **IP Address** of your web server.
+#. Calmでは、アプリケーションステータスが **実行状態(Running)** に変更すると、 **Services** タブを選択し、 **NodeReact** サービスを選択して、あなたのウェブサーバの **IP Address** を得ることができます。
 
    .. figure:: images/15.png
 
-#. Open \http://*NODEREACT-IP-ADDRESS*/ in a new browser tab to access the development instance of your **Fiesta** application.
+#. 新しいブラウザタブで \http://*NODEREACT-IP-ADDRESS*/ を開き、 **Fiesta** アプリケーションの開発のインスタンスにアクセスします。
 
-Refreshing Cloned Databases
+クローンされたデータベースのリフレッシュ
 +++++++++++++++++++++++++++
 
-Now that you have a functioning development environment, it's time to create some changes within your production environment.
+あなたは機能する開発環境を持っています。あなたの業務用の環境内で変更を実施する時です。
 
-#. In a new browser tab, return to your **Production** Fiesta web app. Click **Products > Add New Product**.
+#. 新しいブラウザのタブで、あなたの **業務用(Production)** Fiesta web appに戻り、 **Products > Add New Product** をクリックします。
 
    .. figure:: images/16.png
 
-#. Fill out the following fields and click **Submit**:
+#. 以下の通り入力し、 **Submit** をクリックします。
 
    - **Product Name** - The Best Balloons
    - **Suggested Retail Price** - 100.00
@@ -191,60 +186,60 @@ Now that you have a functioning development environment, it's time to create som
 
    .. figure:: images/17.png
 
-#. Click **Stores** from the menu and select **View Store** from one of the available stores.
+#. メニューから **Stores** をクリックし、利用可能なstoreの1つから **View Store** を選択します。
 
-#. Click **Add New Store Product**. Fill out the following fields and click **Submit**:
+#. **Add New Store Product** をクリックします。以下の通り入力し、 **Submit** をクリックします。
 
    - **Product Name** - The Best Balloons
    - **Local Product Price** - 99.99
    - **Initial Qty** - 1000
 
-#. Verify the inventory for the added product appears on the **Store Details** page.
+#. **Store Details** ページ上で加えられたproduct(製品)のiventory(インベントリ)を確認します。
 
    .. figure:: images/18.png
 
-#. In a separate browser tab, open your **Dev** Fiesta web app. Confirm that the products and inventory added to the **Production** instance are not present.
+#. 異なるブラウザタブで、あなたの **Dev** Fiesta web appを開きます。 **業務用(Production)** インスタンスに加えられたproductとinventoryが表示されていないことを確認します。
 
-#. In **Era > Time Machines**, select the Time Machine that corresponds to your production database. Select **Actions > Log Catch Up > Yes** to ensure the latest database entries have been flushed to disk.
+#. **Era > Time Machines** で、あなたの業務用のデータベースに対応するTime Machineを選択します。 **Actions > Log Catch Up > Yes** を選択して、最新のデータベースエントリがディスクにフラッシュされたことを確認します。
 
    .. figure:: images/19.png
 
-#. Monitor the log catch up on the **Operations** page. This should take approximately 1 minute.
+#. **Operations** ページ上で、log catch up(ログキャッチアップ)をモニターします。これはおよそ1分かかります。
 
    .. figure:: images/20.png
 
-#. In **Era > Databases > Clones**, select your cloned database and click **Refresh**.
+#. **Era > Databases > Clones** で、あなたのクローンされたデータベースを選択し、 **Refresh** をクリックします。
 
    .. figure:: images/21.png
 
-#. By default, the database will be refreshed to the most recent **Point in Time**, but you can manually specify a time or individual snapshot. For the purposes of this exercise, use the most recent time. Click **Refresh**.
+#. デフォルトでは、データベースは最新の **ポイントインタイム(Point in Time)** にリフレッシュされます。しかし、あなたは手動で時間または個々のスナップショットを指定します。この演習の目的について、最新の時間を使用します。 **Refresh**  をクリックします。
 
    .. figure:: images/22.png
 
-#. Monitor the refresh on the **Operations** page. This should take approximately 4 minutes.
+#. **Operations** ページ上でリフレッシュをモニターします。これはおよそ4分かかります。
 
-#. Once the refresh has completed, open your **Dev** Fiesta web app and validate the product and inventory data now matches your production database.
+#. リフレッシュが完了すると、あなたの **Dev**  Fiesta web appを開き、productとinventoryのデータがあなたの業務用データベースに合うことを確認します。
 
    .. figure:: images/18.png
 
-   With a few mouse clicks, your DBA was able to push current production data to the cloned database. This could be further automated through the Era CLI or APIs.
+   少しのマウスクリックで、あなたのDBAは現在の業務用データをクローンされたデータベースにプッシュできました。これはEra CLI やAPIでさらに自動化することができます。
 
-(Optional) Provisioning Additional Databases to Existing Servers
+(Optional) 追加のデータベースを既存のサーバにプロビジョニング
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-It's not uncommon to have a single database server running multiple databases, especially in test/dev environments. In this exercise you will provision an additional database for a next generation version of the Fiesta application to your existing development SQL Server VM.
+test/devの環境において、複数のデータベースを稼働するシングルデータベースサーバは一般的です。この演習では、次の世代のバージョンのFiestaアプリケーションのための追加のデータベースを、あなたの既存の開発用SQL Server VMにプロビジョニングします。
 
-#. In **Era > Databases > Sources**, click **Provision > Single Node Database**.
+#. **Era > Databases > Sources** において、 **Provision > Single Node Database** をクリックします。
 
-#. In the **Provision a Database** wizard, fill out the following fields to configure the Database Server:
+#. **Provision a Database** ウィザードにおいて、以下の通り入力して、Database Server を設定します。
 
    - **Engine** - Microsoft SQL Server
    - **Database Server** - Use Registered Server
-   - **Name** - *Select your cloned Database Server*
+   - **Name** - *あたながクローンしたDatabase Serverを選択します*
 
    .. figure:: images/23.png
 
-#. Click **Next**, and fill out the following fields to configure the Database:
+#. **Next** をクリックし、以下の通り入力してDatabaseを設定します。
 
    - **Database Name** - *Initials*\ -fiesta2
    - **Description** - (Optional)
@@ -253,7 +248,7 @@ It's not uncommon to have a single database server running multiple databases, e
 
    .. figure:: images/24.png
 
-#. Click **Next** and fill out the following fields to configure the Time Machine for your database:
+#. **Next**  をクリックし、以下の通り入力して、あなたのデータベースのTime Machineを設定します。
 
    - **Name** - *initials*\ -fiesta2_TM (Default)
    - **Description** - (Optional)
@@ -262,21 +257,21 @@ It's not uncommon to have a single database server running multiple databases, e
 
    .. figure:: images/25.png
 
-#. Click **Provision** to begin creating the **fiesta2** database on your existing server.
+#. **Provision** をクリックし、あなたの既存のサーバ上に、 **fiesta2**  databaseを作成します。
 
-#. Select **Operations** from the dropdown menu to monitor the provisioning. This process should take approximately 8 minutes.
+#. ドロップダウンメニューから **Operations**  を選択し、プロビジョニングをモニターします。このプロセスはおよそ8分かかります。
 
    .. figure:: images/26.png
 
-#. Once the operation has completed, RDP to the cloned, development Database Server and validate in **SQL Server Management Studio** that your **fiesta2** database is available on your development server.
+#. 操作が完了すると、そのクローンされた開発用のDatabase ServerにRDP接続し、 **SQL Server Management Studio** で、あなたの **fiesta2**  databaseがあなたの開発用サーバ上で利用可能なことを、確認します。
 
    .. figure:: images/27.png
 
-Takeaways
+重要なポイント
 +++++++++
 
-What are the key things we learned in this lab?
+このラボで学んだ重要なことは何でしょうか。
 
-- Era makes it simple to create space efficient, zero-byte database clones to any point-in-time
-- Era provides production-like QoS for clones, with fast creation and data refresh
-- Era operations can be performed through REST API, making it easy to integration with Nutanix Calm or third-party automation solutions
+- Eraは、任意の時点へのスペース効率の良いゼロバイトデータベースクローンを簡単に作成できます
+- Eraは、クローンに商用データベースと同等のQoSを提供します。高速な作成とデータリフレッシュを行います
+- Eraの操作は、REST APIを通して実行でき、Nutanix Calmや3rdパーティの自動化ソリューションとの統合も容易にします

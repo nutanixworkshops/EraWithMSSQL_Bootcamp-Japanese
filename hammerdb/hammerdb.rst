@@ -1,54 +1,54 @@
 .. _hammerdb:
 
 ------------------------------------------------
-Performance Testing of MSSQL using HammerDB
+HammerDBを使ったMSSQLの性能試験
 ------------------------------------------------
 
-In this bonus lab you will install HammerDB tool and use it to benchmark MSSQL database performance on a given VM
+このボーナスラボでは、あなたはHammerDBツールをインストールし、それを使って、対象VM上のMSSQL データベース性能をベンチマークします。
 
 
-Lab Agenda
+ラボアジェンダ
 +++++++++++
 
-#. Test database performance on MS SQL database configured following Best Practices
+#. 以下のベストプラクティスに従い設定されたMS SQLデータベース上のデータベース性能をテストする
 
-#. Test database performance on MS SQL database configured without following Best Practices - here all the database files are located in a single OS drive
+#. ベストプラクティスに従わずに設定されたMS SQLデータベース上のデータベース性能をテストします。ここでは、データベースファイルは１つのOSドライブ上にあります。
 
    .. note::
-      This bonus lab takes between 60 and 90 minutes depending on your familiarity with MS SQL databases.
+      このラボは60-90分かかり、MS SQL データベースのあなたの習熟度に依存します。
 
-Install HammerDB
+HammerDBのインストール
 ++++++++++++++++++++
 
-#. Select your *Initials*-MSSQL-Manual VM and click **Actions > Power On**.
+#. あなたの *Initials*-MSSQL-Manual VMを選択し、 **Actions > Power On** をクリックします。
 
-#. Log in to the VM using Remote Desktop Client/Console using the Administrator password you configured in **Manual VM Deployment** in :ref:`deploy_mssql` lab.
+#. Remote Desktop Client/Console を使って、VMにログインします。その際、 :ref:`deploy_mssql` ラボ内の、 **手動でのVMのデプロイ** であなたが設定した管理者パスワードを使用します。
 
-#. Download the HammerDB setup binaries on your VM from `here <http://10.42.194.11/workshop_staging/HammerDB/HammerDB-3.3-Win-x86-64-Setup.exe>`_. (Copy link address)
+#. HammerDBのセットアップバイナリを `ここから <http://10.42.194.11/workshop_staging/HammerDB/HammerDB-3.3-Win-x86-64-Setup.exe>`_ あなたのVM上にダウンロードします。(リンクアドレスのコピー)
 
-#. Go to the downloaded location: righ-click on the file and click on Advanced.
+#. ダウンロードした場所にいき、そのファイルを右クリックの上、Advanced をクリックします。
 
-#. Install HammerDB using the instuctions `here <https://www.hammerdb.com/docs/ch01s04.html#d0e166>`_ and make sure to install HammerDB in ``C:`` drive (default).
+#.  `ここの <https://www.hammerdb.com/docs/ch01s04.html#d0e166>`_ インストラクションを使って、 ``C:`` ドライブ(デフォルト)内にHammerDBをインストールするようにします。
 
    .. note::
-      If the installation URL doesn't work. Install the **exe** file as you would install any normal windows package. It is as simple as clicking **Next**.
+      インストールのURLがうまくいかないとき、標準のwindowsパッケージをインストールするように **exe** ファイルをインストールします。 **Next** をクリックするくらい簡単です。
 
-#. Once installed, **Close** HammerDB window (if you chose to **Launch HammerDB**).
+#. インストールすると、HammerDBウィンドウを **閉じます** 。(HammerDBを起動することを選ぶ場合)
 
    .. figure:: images/1.png
 
-Database Test 1 (with best practices on SQL)
+データベーステスト1 (SQLのベストプラクティスを利用)
 +++++++++++++++++++++++++++++++++++++++++++++
 
-In this section you will create a sample database (tpcc) following MS SQL Best Practices for database files on different drives. Once created, you will populate the database with data using HammerDB tool and run IO tests on it.
+この演習では、サンプルデータベース(tpcc)を作成し、異なるドライブ上のデータベースファイルのためのMSSQL ベストプラクティスに従います。いったん作成されると、HammerDBツールを使ってデータベースにデータが投入され、IOテストを実行します。
 
-This will give you an opportunity to learn to use HammerDB tool and prepare you for the real world DB performance testing situations.
+これはあなたにHammerDBツールの使い方を学ぶ機会を与え、実際にDB性能をテストする状況の準備をします。
 
-#. Open `SQL Server Management Studio` from you VM's windows menu.
+#. VMのWindowsメニューから、SQL Server Management Studioを開きます。
 
-#. Enter user name: administrator and *Nutanix/4u* password and click on connect.
+#. ユーザ名：administrator と パスワード： *Nutanix/4u* を入力し、connect をクリックします。
 
-#. Go to Windows Explorer and create the the following folders:
+#. Windowsエクスプローラに行き、以下のフォルダを作成します。
 
    ::
 
@@ -57,181 +57,181 @@ This will give you an opportunity to learn to use HammerDB tool and prepare you 
      G:\data
      I:\logs
 
-#. Right click on databases and select **New database**.
+#. データベースを右クリックして、 **New database**.を選択します。
 
    .. figure:: images/newdb.png
 
-#. Give the name of the database as **tpcc**.
+#. **tpcc** としてデータベース名を入力します。
 
-#. In the Database files table, scroll and select the path for tpcc and tpcc_log folder.
+#. Database filesのテーブルにおいて、tpccとtpcc_log フォルダのためのPathを選択します。
 
-#. For tpcc, set path to ``E:\data``.
+#. tpccに関して、path を ``E:\data`` にセットします。
 
-#. For tpcc_log, set path to ``I:\logs``.
+#. tpcc_logに関して、path を ``I:\logs`` にセットします。
 
-#. Click on **Add** button twice to create two more database files.
+#. **Add** ボタンを2回クリックし、2つ以上のdatabase fileを作成します。
 
-#. Name them as **tpcc_f** and **tpcc_g**.
+#. それらを **tpcc_f** と **tpcc_g** として名前を付けます。
 
-#. Set the path for two files as ``F:\data`` and ``G:\data``.
+#. pathを2つのdatabase fileにセットします。 ``F:\data`` と ``G:\data`` 。
 
    .. figure:: images/newdbpath.png
 
-#. To make sure the tables are created properly, right click on **tpcc** DB and select properties. Click on **Files** and make sure the path of the folders are set right.
+#. テーブルが適切に作成されるようにするために、 **tpcc** DBを右クリックしてproperties を選択します。 **Files** をクリックし、フォルダのパスが正しくセットされているようにしてください。
 
-#. Go to ``C:\Program Files\HammerDB-*.*\Hammerdb`` (windows batch file)
+#. ``C:\Program Files\HammerDB-*.*\Hammerdb`` (windowsのバッチファイル)に移動します。
 
-#. Double click on **SQL**
+#. **SQL** をダブルクリックします。
 
    .. figure:: images/dblclicksql.png
 
-#. Select **SQL-Server** and **TPC-C** options and click on **OK**
+#. **SQL-Server** と **TPC-C** オプションを選択して、 **OK** をクリックします。
 
    .. figure:: images/selsqltpc-c.png
 
-#. Expand Schema Build and Double click on Options.
+#. Schema Buildを開いて、Optionsをダブルクリックします。
 
-#. Change **Sql Server Database** name to **tpcc**.
+#. **Sql Server Database** 名を **tpcc** に変更します。
 
-#. Change number of warehouses to 150.
+#. warehouseの数を150に変更します。
 
-#. Change virtual users to build schema to 16.
+#. virtual users to build schema を 16に変更します。
 
-#. Click on **OK**
+#. **OK** をクリックします。
 
    .. figure:: images/warehousevirtualusers.png
 
-#. Double click on **Build** option. click on ok, data will start building.
+#. **Build** をダブルクリックし、OKをクリックします。データのビルドが開始します。
 
    .. figure:: images/dblclickbuild.png
 
-#. Click on **Start Transaction Counter** and observer transactions.
+#. **Start Transaction Counter**  をクリックしてトランザクションを観察してください。
 
    .. figure:: images/starttrncnt.png
 
    .. figure:: images/trncnt.png
 
-#. **Do not close** HammerDB, just **minimize** the window.
+#. HammerDBを **閉じない** でください。ただウィンドウを **最小化** してください。
 
    .. note::
-      If you close HammerDB, populating of data will stop
+      もしHammerDBをクローズしたら、テータの投入がストップします。
 
-#. Go to the drives ``E\data``, ``F:\data``, ``F:\data``, ``I:\logs`` and check if the size of the folders is increasing.
+#. ``E\data``, ``F:\data``, ``F:\data``, ``I:\logs`` ドライブに移動して、フォルダーのサイズが増えているか確認ください。
 
-#. Wait until the data gets generated. This generates up to 15GB of data.
+#. データが生成されるまで待ってください。これは15GBのデータまで生成します。
 
    .. note::
-      It may take from 15 - 20 minutes for data population
+      データの投入には15-20分かかります。
 
-#. Once the data is generated, open hammer db that is already minimized.
+#. データが生成されると、既に最小化されているhammer dbを開いてください。
 
-#. Click on Destroy Virtual Users.
+#. Destroy Virtual Users をクリックください。
 
    .. figure:: images/destroyvirtusers.png
 
-#. Double click on **Driver Script > Options**. Make sure **SQL Server Database** name is **tpcc** (the database you created in the previous few steps).
+#. **Driver Script > Options** をダブルクリックしてください。 **SQL Server Database** の名前が **tpcc** (前の数ステップで作成したデータベース)であるようにしてください。
 
-#. Select "TPC-C driver script" as **Timed Driver Script**.
+#. “TPC-C driver script”を **Timed Driver Script** として選択ください。
 
-#. Leave rest of them as-is and select **OK**.
+#. 残りはそのままにして **OK** を選択します。
 
    .. note::
-      **Optional:** You can also try using the option **Keying and thinking time** for making the IOPS more intensive.
+      **Option: ** IOPSをさらに激しくするための **Keying and thinking time** のオプションの使用を試すこともできます。
 
    .. figure:: images/drvscript.png
 
-#. Double click on **Load**
+#. **Load** をダブルクリックします。
 
-#. Go to **Virtual users** and click on **Options**.
+#. **Virtual users** に移動して、 **Options** をクリックします。
 
-#. Make sure **Virtual users** in the popped-up window is 17 and click **OK**
+#. ポップアップウィンドウ内の **Virtual users** が17であるようにし、 **OK** をクリックします。
 
-#. Double click on **Create** and then double click on **Run** operations.\
+#. **Create** をダブルクリックし、 **Run** 操作をダブルクリックください。
 
    .. figure:: images/setvirtusers.png
 
-#. While IO is getting generated, click on **Transactions Counter** and note the **TPM**. (Start the TPM counter if not already started)
+#. IOが生成される間、 **Transactions Counter** をクリックし、 **TPM** をメモします。(もしまだ始まっていないならTPM counter をスタートしてください)
 
    .. figure:: images/multitpm.png
 
-#. Take screenshots and send TPM results to prospective customers or use it for your own reference.
+#. スクリーンショットをとって、TPMの結果を見込み顧客に送付、またはあなた自身のリファレンスに使ってください。
 
 
-Database Test 2 (without best practices on SQL)
+データベーステスト2(SQLのベストプラクティスを利用しない)
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-Let's simulate a scenario where best practices for MS SQL databases are not followed. In this screnario the data and log files for a SQL database is in the same drive.
+MS SQL データベースのベストプラクティスに従わないシナリオをシミュレーションしましょう。このシナリオでは、SQL データベースのデータとログファイルが同じドライブにあります。
 
-#. Repeat the same procedure for another database.
+#. 他のデータベースと同じ手順を繰り返します。
 
-#. Name the datbase **tpcc1**
+#. database **tpcc1** を名前を付けます。
 
-#. For tpcc1, set path to ``E:\data``.
+#. tpcc1に関して、pathを ``E:\data`` にセットします。
 
-#. For tpcc1_log, set path to ``E:\logs``. (create logs folder)
+#. tpcc1_logに関して、pathを ``E:\logs`` にセットします。(logフォルダを作成)
 
-#. Populate the database with data using the same procedure as above in HammerDB.
+#. HammerDBにおける上述と同じ手順を使って、データベースにデータを投入します。
 
-#. Wait for the data to be populated
+#. データが投入されるまで待ちます。
 
    .. note::
-      It may take from 15 - 20 minutes for data population
+      データ投入に15-20分かかります。
 
-#. Confirm data is populated using the same procedure as above.
+#. 上述と同じ手順を使って、データが投入されていることを確認します。
 
-#. Click on Destroy Virtual Users.
+#. Destroy Virtual Users をクリックします。
 
    .. figure:: images/destroyvirtusers.png
 
-#. Double click on **Driver Script > Options**. Make sure **SQL Server Database** name is **tpcc1** (the database you created in the previous few steps).
+#. **Driver Script > Options** をダブルクリックします。 **SQL Server Database** の名前が **tpcc1** (前の数ステップで作成したデータベース)であるようにしてください。
 
-#. Select "TPC-C driver script" as **Timed Driver Script**.
+#. "TPC-C driver script" を **Timed Driver Script** として選択します。
 
-#. Leave rest of them as-is and select **OK**.
+#. 残りをそのままにして **OK** を選択します。
 
    .. note::
-    **Optional:** You can also try using the option **Keying and thinking time** for making the IOPS more intensive.
+    **Optional:** IOPSをさらに激しくするための **Keying and thinking time** のオプションの使用を試すこともできます。
 
    .. figure:: images/drvscript.png
 
-#. Double click on **Load**
+#. **Load** をダブルクリックします。
 
-#. Go to **Virtual users** and click on **Options**.
+#. **Virtual users** を移動し、 **Options** をクリックします。
 
-#. Make sure **Virtual users** in the popped-up window is 17 and click **OK**
+#. ポップアップウィンドウ内の **Virtual users** が17であるようにし、 **OK** をクリックします。
 
-#. Double click on **Create** and then double click on **Run** operations.\
+#. **Create** をダブルクリックして **Run** 操作をダブルクリックします。
 
    .. figure:: images/setvirtusers.png
 
-#. While IO is getting generated, click on **Transactions Counter** and note the **TPM**. (Start the TPM counter if not already started)
+#. IOが生成される間、 **Transactions Counter** をクリックし、 **TPM** をメモします。(もしまだ始まっていないならTPM counter をスタートしてください)
 
    .. figure:: images/singletpm.png
 
-#. Take screenshots and send TPM results to prospective customers or use it for your own reference.
+#. スクリーンショットをとって、TPMの結果を見込み顧客に送付、またはあなた自身のリファレンスに使ってください。
 
    .. note::
-      You should now notice that a database configured withouth following best practices performs slower than the database created following best practices.
-      In this case, the database **tpcc1** is four times slower than database **tpcc**.
+      ベストプラクティスに従わないで設定されたデータベースはベストプラクティスに従って作成されたデータベースより遅いです。
+      このケースでは、データベース **tpcc1** は、データベース **tpcc** より4倍遅いです。
 
    .. note::
-      Please note that the test used here are using heavy I/O. Consider changing them in your own test to suit customers workloads.
+      ここで使われたテストはI/O負荷が高いことを確認ください。顧客のワークロードに合わせてあなた自身のテスト環境を変更することを検討ください。
 
-#. Also check the **I/O Metrics** in Prism Element to see if you can observe I/O patterns, latencies, SSD/HDD usage and block sizes of files used by the VM you are running HammerDB tests on.
+#. また、Prism Elementで **I/O メトリクス** をチェックして、I/Oパターン、レイテンシ、SSD / HDDの使用状況、およびHammerDBテストを実行しているVMで使用されるファイルのブロックサイズを確認してみましょう。
 
    .. figure:: images/vmiopattern.png
 
-Takeaways
+重要なポイント
 ++++++++++
 
-#. HammerDB gives you a way to test DB performance with dummy data that it generates
+#. HammerDBはダミーデータを生成してそれを用いてDB性能をテストする方法をあなたに提供します。
 
-#. HammerDB is free and easy to use
+#. HammerDBはフリーで使いやすいです。
 
-#. Following best practices is the key to SQL DB Performance
+#. ベストプラクティスに従うことはSQL DB性能の鍵です。
 
-#. Always right-size DB and DB Servers (do not over-provision or under-provision)
+#. 常にDBとDBサーバーを適切にサイジングします(オーバープロビジョニングやアンダープロビジョニングはしない)。
 
-#. Introduce performance benchmarking to your customers as much as possible. It will make your life easier
+#. 可能な限り顧客にパフォーマンスベンチマークを導入してください。あなたの環境は良くなります。
 
-#. **Nutanix Era** deploys databases with best practices
+#. **Nutanix Era** はデータベースをベストプラクティスでデプロイします。

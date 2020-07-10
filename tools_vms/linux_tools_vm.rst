@@ -4,35 +4,35 @@
 Linux Tools VM
 ---------------
 
-Overview
+概要
 +++++++++
 
-This CentOS VM image will be staged with packages used to support multiple lab exercises.
+このCentOS VMイメージは、複数のラボ演習をサポートするために使用されるパッケージを持ちます。
 
-Deploy this VM on your assigned cluster if directed to do so as part of **Lab Setup**.
+**Lab Setup**.の一環として指示された場合は、割り当てられたクラスターにこのVMをデプロイします。
 
 .. raw:: html
 
-  <strong><font color="red">Only deploy the VM once, it does not need to be cleaned up as part of any lab completion.</font></strong>
+  <strong><font color="red">VMは1度だけデプロイします。ラボの完了時にクリーンアップする必要はありません。</font></strong>
 
-Deploying CentOS
+CentOSのデプロイ
 ++++++++++++++++
 
-In **Prism Central** > select :fa:`bars` **> Virtual Infrastructure > VMs**, and click **Create VM**.
+**Prism Central** > :fa:`bars` **> Virtual Infrastructure > VMs** と進み、 **Create VM** をクリックします。
 
-Fill out the following fields:
+以下の通り入力します。
 
 - **Name** - *Initials*-Linux-ToolsVM
-- **Description** - (Optional) Description for your VM.
+- **Description** - (Option) あなたのVMを説明します。
 - **vCPU(s)** - 1
 - **Number of Cores per vCPU** - 2
 - **Memory** - 2 GiB
 
-- Select **+ Add New Disk**
+- **+ Add New Disk** を選択します。
     - **Type** - DISK
     - **Operation** - Clone from Image Service
     - **Image** - CentOS7.qcow2
-    - Select **Add**
+    - **Add** を選択します。
 
 .. -------------------------------------------------------------------------------------
 .. The Below as soon as 5.11 is GA and we want to run that version for our workshops!!!!
@@ -47,23 +47,23 @@ Fill out the following fields:
 .. -------------------------------------------------------------------------------------
 
 
-- Select **Add New NIC**
+- **Add New NIC** を選択します。
     - **VLAN Name** - Secondary
-    - Select **Add**
+    - **Add** を選択します。
 
-Click **Save** to create the VM.
+**Save** をクリックし、VMを作成します。
 
-Power on the VM.
+VMの電源を入れます。
 
-Installing Tools
+ツールのインストール
 ++++++++++++++++
 
-Login to the VM via ssh or Console session, using the following credentials:
+SSHやコンソールのセッションでVMにログインします。以下の認証情報を使用します。
 
 - **Username** - root
 - **password** - nutanix/4u
 
-Install the software needed by running the following commands:
+以下コマンドを実行して必要なソフトウェアをインストールします。
 
 .. code-block:: bash
 
@@ -73,10 +73,10 @@ Install the software needed by running the following commands:
   npm install -g express
 
 
-Configuring NTP
+NTPの設定
 ...............
 
-Enable and configure NTP by running the following commands:
+以下のコマンドを実行してNTPを有効化して設定します。
 
 .. code-block:: bash
 
@@ -85,10 +85,10 @@ Enable and configure NTP by running the following commands:
   ntpdate -u -s 0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org
   systemctl restart ntpd
 
-Disabling Firewall and SELinux
+FirewallとSELinuxを無効化
 ..............................
 
-Disable the firewall and SELinux by running the following commands:
+以下のコマンドを実行してfirewallとSELinuxを無効化します。
 
 .. code-block:: bash
 
@@ -97,10 +97,10 @@ Disable the firewall and SELinux by running the following commands:
   setenforce 0
   sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
 
-Installing Python
+Pythonのインストール
 .................
 
-Install Python by running the following commands:
+以下のコマンドを実行してPythonをインストールします。
 
 .. code-block:: bash
 

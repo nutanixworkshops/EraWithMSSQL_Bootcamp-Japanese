@@ -1,77 +1,77 @@
 .. _labsetup:
 
 ----------------------
-MSSQL Lab Setup
+MSSQLのラボセットアップ
 ----------------------
 
-Welcome to the Databases bootcamp. This bootcamp is meant to provide you with first hand experience in why Nutanix is an ideal platform for Database workloads.
+データベースのブートキャンプへようこそ。このブートキャンプでは、Nutanixがデータベースのワークロードの理想的なプラットフォームである理由を直接体験できます。
 
-Historically, it has been a challenge to virtualize SQL Server because of the high cost of traditional virtualization stacks and the impact that a SAN-based architecture can have on performance. Businesses and their IT departments have constantly fought to balance cost, operational simplicity, and consistent predictable performance.
+もともと、SQL Serverを仮想化することは困難でした。それは、従来の仮想化スタックは高コストであり、SANベースのアーキテクチャは性能に影響を及ぼすからです。ビジネスとIT部門は、コスト、運用の単純化、一貫性のある予測可能な性能について議論してきました。
 
-The Nutanix Enterprise Cloud removes many of these challenges and makes virtualizing a business-critical application such as SQL Server much easier. The Acropolis Distributed Storage Fabric (DSF) is a software-defined solution that provides all the features one typically expects in an enterprise SAN, without a SAN’s physical limitations and bottlenecks. SQL Server particularly benefits from the following DSF features:
+Nutanixエンタープライズクラウドは、これら多くの困難を取り除き、SQL Serverのようなビジネスクリティカルアプリケーションの仮想化を一段と容易にします。Acropolis分散ストレージファブリック(DSF)は、エンタープライズSANで期待された代表的な全ての機能を提供するソフトウエアデファインドのソリューションで、SANの物理的な制限やボトルネックを回避します。SQL Serverは特に以下のDSFの機能から恩恵を得ます。
 
-- Localized I/O and the use of flash for index and key database files to lower operation latency.
-- A highly distributed approach that can handle both random and sequential workloads.
-- The ability to add new nodes and scale the infrastructure without system downtime or performance impact.
-- Nutanix data protection and disaster recovery workflows that simplify backup operations and business continuity processes.
+- ローカライズされたI/Oと、インデックスと主要なデータベースファイル用にフラッシュを使用して操作時のレイテンシ低減
+- ランダムとシーケンシャルの両方のワークロードを処理する高度な分散処理
+- 新しいノードを追加可能でシステムダウンタイムや性能への影響なしにインフラを拡張可能
+- バックアップ操作やビジネス継続のプロセスを単純化する、Nutanixのデータ保護とディザスタリカバリのワークフロー
 
-In addition to solving common infrastructure problems for hosting business critical applications, Nutanix also seeks to address many of the key pain points associated with managing databases.
+ビジネスクリティカルなアプリケーションをホストする際の共通のインフラの問題を解決するだけでなく、Nutanixはデータベース管理に関わる主要な多くの問題の解決を目指します。
 
 .. figure:: images/4.png
 
-Based on a 2018 IDC study of 500 North American companies with more than 1,000 employees, they estimate:
+1000人以上の従業員を持つ500の北米企業の2018年IDCの調査によると、以下の通り推定されています。
 
-- 77% of the organizations have more than 200 database instances in their production
-- 82% have more than 10 copies of each DB
-- 45%-60% the total storage capacity is dedicated to accommodating copy data
-- 32% of database clones require daily refreshes for analytics of dev/test
-- Copy data will cost IT organizations $55.63 billion in 2020
+- 77%の組織が200以上のデータベースインスタンスを業務システム内に持ちます。
+- 82%は各DBの10以上のコピーを持ちます。
+- 45%-60%のストレージ容量の合計はコピーデータを保管用に占有されています。
+- 32%のデータベースのクローンは開発／テストの分析用に日々更新が必要です。
+- コピーデータにIT部門は2020年556.3億ドルのコストを費やします。
 
-Maintaining the status quo leads to inefficient usage of both storage and worse, of administrator time. Meet Nutanix Era.
+現状のままだとストレージの使用や管理者の時間は非効率です。Nutanix Eraを検討してください。
 
 .. figure:: images/5.png
 
-Nutanix Era provides DBaaS for your Enterprise Cloud. Leveraging the Nutanix Enterprise Cloud OS, we are able to take advantage of the power of full stack - data, compute, and software. Nutanix Era hides the complexity of database operations and provides common APIs, CLI, and consumer-grade GUI experience for multiple database engines. It makes database operations such as cloning efficient, thereby driving down the TCO of database management for our customers.
+Nutanix EraはエンタープライズクラウドでDBaaSを提供します。Nutanixエンタープライズクラウドを利用して、データ、計算資源、ソフトウェアのフルスタックの能力を得ます。Nutanix Eraはデータベースの操作の複雑さを排除し、複数のデータベースエンジン向けに、共通のAPI、CLI、コンシューマグレードのGUIを提供します。クローンのようなデータベースの操作を効率的にし、顧客のデータベース管理のTCOを低減します。
 
 
-Configuring a Project
+Projectの設定
 +++++++++++++++++++++
 
-In this lab you will leverage multiple pre-built Calm Blueprints to provision your applications...
+このラボでは、アプリケーションをプロビジョニングするための事前に定義された複数のCalm Blueprintを利用します。
 
-#. In **Prism Central**, select :fa:`bars` **> Services > Calm**.\
+#. **Prism Central**で、 :fa:`bars` **> Services > Calm**を選択します。\
 
-#. Select **Projects** from the lefthand menu and click **+ Create Project**.
+#. 左側のメニューから **Projects** を選択し、 **+ Create Project** をクリックします。
 
    .. figure:: images/2.png
 
-#. Fill out the following fields:
+#. 以下の通り入力します
 
    - **Project Name** - *Initials*\ -Project
-   - Under **Users, Groups, and Roles**, select **+ User**
+   - **Users, Groups, and Roles** にて、 **+ User** を選択します。
       - **Name** - Administrators
       - **Role** - Project Admin
       - **Action** - Save
-   - Under **Infrastructure**, select **Select Provider > Nutanix**
-   - Click **Select Clusters & Subnets**
-   - Select *Your Assigned Cluster*
-   - Under **Subnets**, select **Primary**, **Secondary**, and click **Confirm**
-   - Mark **Primary** as the default network by clicking the :fa:`star`
+   - **Infrastructure** にて、 **Select Provider > Nutanix** を選択します。
+   - **Select Clusters & Subnets** をクリックします。
+   - *あなたにアサインされたクラスタ* を選択します。
+   - **Subnets** にて、 **Primary** 、 **Secondary** を選択して、 **Confirm** をクリックします。
+   -  :fa:`star` をクリックして、デフォルトネットワークとして **Primary** をマークします。
 
    .. figure:: images/3.png
 
-#. Click **Save & Configure Environment**.
+#.  **Save & Configure Environment** をクリックします。
 
-Deploying a Windows Tools VM
+Windows Tools VMのデプロイ
 ++++++++++++++++++++++++++++
 
-Some exercises in this track will depend on leveraging the Windows Tools VM. Follow the below steps to provision your personal VM from a disk image.
+このトラックのいくつかの演習ではWindows Tools VMを利用します。以下のステップに従い、あなたの個人のVMをディスクイメージからプロビジョニングします。
 
-#. In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > VMs**.
+#. **Prism Central** にて、 :fa:`bars` **> Virtual Infrastructure > VMs** を選択します。
 
-#. Click **+ Create VM**.
+#. **+ Create VM** をクリックします。
 
-#. Fill out the following fields to complete the user VM request:
+#. 以下の通り入力して、User VMのリクエストを完成します。
 
    - **Name** - *Initials*\ -WinToolsVM
    - **Description** - Manually deployed Tools VM
@@ -79,16 +79,16 @@ Some exercises in this track will depend on leveraging the Windows Tools VM. Fol
    - **Number of Cores per vCPU** - 1
    - **Memory** - 4 GiB
 
-   - Select **+ Add New Disk**
+   - **+ Add New Disk** を選択します。
       - **Type** - DISK
       - **Operation** - Clone from Image Service
       - **Image** - WinToolsVM.qcow2
-      - Select **Add**
+      - **Add** を選択します。
 
-   - Select **Add New NIC**
+   - **Add New NIC** を選択します。
       - **VLAN Name** - Secondary
-      - Select **Add**
+      - **Add** を選択します。
 
-#. Click **Save** to create the VM.
+#. **Save** をクリックしてVMを作成します。
 
-#. Power on your *Initials*\ **-WinToolsVM**.
+#. あなたの *Initials*\ **-WinToolsVM** の電源をONにします。

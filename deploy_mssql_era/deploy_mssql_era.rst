@@ -1,23 +1,23 @@
 .. _mssqldeploy:
 
 -------------------------
-Deploying MS SQL with Era
+EraでMS SQLのデプロイ
 -------------------------
 
-**In this lab you will create a MSSQL Software Profile, and use Era to deploy a new MSSQL Database Server.**
+**このラボでは、あなたはMSSQL Software Profileを作成し、Eraを使って、新しいMSSQL Database Serverをデプロイします。**
 
-Creating a New MSSQL Database Server
+新しいMSSQL Database Serverの作成
 ++++++++++++++++++++++++++++++++++++
 
-You've completed all the one time operations required to be able to provision any number of SQL Server VMs. Follow the steps below to provision a database of a fresh database server, with best practices automatically applied by Era.
+あなたは既にSQL Server VMをプロビジョニングするのに必要な操作を全て完了しました。以下のステップに従い、Eraにより自動適用されたベストプラクティスで、新しいデータベースサーバのデータベースをプロビジョニングします。
 
-#. In **Era**, select **Databases** from the dropdown menu and **Sources** from the lefthand menu.
+#. **Era** にて、ドロップダウンメニューから **Databases** を選択し、左側メニューから **Sources** を選択します。
 
-#. Click **+ Provision > Single Node Database**.
+#. **+ Provision > Single Node Database** をクリックします。
 
    .. figure:: images/18.png
 
-#. In the **Provision a Database** wizard, fill out the following fields to configure the Database Server:
+#. **Provision a Database** ウィザードにて、以下の通り入力し、データベースサーバを設定します。
 
    - **Engine** - Microsoft SQL Server
    - **Database Server** - Create New Server
@@ -27,9 +27,9 @@ You've completed all the one time operations required to be able to provision an
    - **Compute Profile** - CUSTOM_EXTRA_SMALL
    - **Network Profile** - Primary_MSSQL_NETWORK
    - **Database Time Zone** - Pacific Standard time
-   - Select **Join Domain**
+   - **Join Domain** を選択します。
    - **Windows Domain Profile** - NTNXLAB
-   - **Windows License Key** - (Leave Blank)
+   - **Windows License Key** - (空白のまま)
    - **Administrator Password** - Nutanix/4u
    - **Instance Name** - MSSQLSERVER
    - **Server Collation** - SQL_Latin1_General_CP1_CI_AS
@@ -37,24 +37,24 @@ You've completed all the one time operations required to be able to provision an
    - **SQL Service Startup Account** - ntnxlab.local\\Administrator
    - **SQL Service Startup Account Password** - nutanix/4u
    - **SQL Server Authentication Mode** - Windows Authentication
-   - **Domain User Account** - (Leave Blank)
+   - **Domain User Account** - (空白のまま)
 
    .. figure:: images/19a.png
 
    .. note::
 
-      A **Instance Name** is the name of the database server, this is not the hostname. The default is **MSSQLSERVER**. You can install multiple separate instances of MSSQL on the same server as long as they have different instance names. This was more common on a physical server, however, you do not need additional MSSQL licenses to run multiple instances of SQL on the same server.
+      **Instance Name** はデータベースサーバの名前で、これはホスト名ではありません。デフォルトは、 **MSSQLSERVER** です。異なるインスタンス名にする限り、同じサーバ上にMSSQLの異なるインスタンスをインストールできます。しかし、物理サーバ上では普通ですが、同じサーバ上で複数のSQLインスタンスを動かすために追加のMSSQLライセンスは必要ないです。
 
-      **Server Collation** is a configuration setting that determines how the database engine should treat character data at the server, database, or column level. SQL Server includes a large set of collations for handling the language and regional differences that come with supporting users and applications in different parts of the world. A collation can also control case sensitivity on database. You can have different collations for each database on a single instance. The default collation is **SQL_Latin1_General_CP1_CI_AS** which breaks out like below:
+      **サーバ照合順序** は、データベースエンジンがサーバ、データベース、カラムレベルで文字データをどのように扱うかを決める設定です。SQL Serverは、世界で異なる場所にあるユーザーとアプリケーションをサポートする言語と地域の差を処理するための大きな集合の照合順序を含みます。照合順序はデータベース上で大文字小文字の区別を制御します。あたなは、シングルインスタンス上の各データベースの異なる照合順序を持ちます。デフォルトの照合順序は **SQL_Latin1_General_CP1_CI_AS** で、以下のように起こります。
 
-      - **Latin1** makes the server treat strings using charset latin 1, basically **ASCII**
-      - **CP1** stands for Code Page 1252. CP1252 is  single-byte character encoding of the Latin alphabet, used by default in the legacy components of Microsoft Windows for English and some other Western languages
-      - **CI** indicates case insensitive comparisons, meaning **ABC** would equal **abc**
-      - **AS** indicates accent sensitive, meaning **ü** does not equal **u**
+      - **Latin1** は、基本的には **ASCII** の文字コードlatin1を使って、サーバがストリングを扱うようにします。
+      - **CP1** はCode Page 1252を表します。CP1252は、英語と他の西洋言語用の、Microsoft Windowsのレガシーなコンポーネントでデフォルトで用いられたラテンアルファベットのシングルバイトの文字コードです。
+      - **CI** は大文字小文字を区別し、 **ABC** は **abc** と同一です。
+      - **AS** はアクセントを区別し、 **ü** は **u** と同一ではないです。
 
-      **Database Parameter Profiles** define the minimum server memory SQL Server should start with, as well as the maximum amount of memory SQL server will use. By default, it is set high enough that SQL Server can use all available server memory. You can also enable contained databases feature which will isolate the database from others on the instance for authentication.
+      **Database Parameter Profiles** は、SQL Serverの始めの最小のサーバメモリとSQL Serverが使用する最大メモリを定義します。デフォルトでは、SQL Serverが全ての利用可能なサーバメモリを使うよう高く設定されます。認証のためにインスタンス上の他のデータベースからデータベースを分離する包含データベースの機能を有効にできます。
 
-#. Click **Next**, and fill out the following fields to configure the Database:
+#. **Next** をクリックし、以下のフィールドを入力しデータベースを設定します。
 
    - **Database Name** - *Initials*\ -fiesta
    - **Description** - (Optional)
@@ -65,20 +65,20 @@ You've completed all the one time operations required to be able to provision an
 
    .. note::
 
-      Common applications for pre/post-installation scripts include:
+      プリ/ポストインストールスクリプトを利用する共通のアプリケーションは次のとおりです。
 
-      - Data masking scripts
-      - Register the database with DB monitoring solution
-      - Scripts to update DNS/IPAM
-      - Scripts to automate application setup, such as app-level cloning for Oracle PeopleSoft
+      - データマスキングスクリプト
+      - DBのモニターソリューションでデータベースを登録する
+      - DNS/IPAMをアップデートするスクリプト
+      - Oracle PeopleSoftのためのアプリケーションレベルのクローニングのような、アプリケーションのセットアップを自動化するスクリプト
 
-#. Click **Next** and fill out the following fields to configure the Time Machine for your database:
+#. **Next** をクリックし、以下の通り入力し、あなたのデータベースのTime Machineを設定します。
 
    .. note::
 
       .. raw:: html
 
-        <strong><font color="red">It is critical to select the BRONZE SLA in the following step. The default BRASS SLA does NOT include Continuous Protection snapshots.</font></strong>
+        <strong><font color="red">以下の手順でBRONZE SLA を選択することは重要です。デフォルトのBRASS SLA は、継続的な保護(Continuous Protection) スナップショットは含みません。</font></strong>
 
    - **Name** - *initials*\ -fiesta_TM (Default)
    - **Description** - (Optional)
@@ -87,63 +87,63 @@ You've completed all the one time operations required to be able to provision an
 
    .. figure:: images/21.png
 
-#. Click **Provision** to begin creating your new database server VM and **fiesta** database.
+#. **Provision** をクリックし、あなたの新しいDatabase server VMと **fiesta** databaseの作成を開始します。
 
-#. Select **Operations** from the dropdown menu to monitor the provisioning. This process should take approximately 20 minutes.
+#. ドロップダウンメニューから **Operations** を選択し登録をモニターします。このプロセスはおよそ20分かかります。
 
    .. figure:: images/22.png
 
    .. note::
 
-      Observe the step for applying best practices in **Operations**.
+      **Operations** において、ベストプラクティスを適用するステップを見ます。
 
-      Some of the best practices automatically configured by Era include:
+      Eraで自動設定されるベストプラクティスは以下のものがあります。
 
-      - Distribute databases and log files across multiple vDisks.
-      - Do not use Windows dynamic disks or other in-guest volume management
-      - Distribute vDisks across multiple SCSI controllers (for ESXi)
-      - For each database, use multiple data files: one file per vCPU.
-      - Configure initial log file size to 4 GB or 8 GB and iterate by the initial amount to reach the desired size.
-      - Use multiple TempDB data files, all the same size.
-      - Use available hypervisor network control mechanisms (for example, VMware NIOC).
+      - データベースとログファイルを複数のvDiskに分散します。
+      - Windows ダイナミック ディスク や他のin-guestのボリューム管理は使用しません。
+      - (ESXiでは) 複数のSCSIコントローラでvDiskを分散します。
+      - 各データベースでは、複数のデータファイルを使用します（vCPUあたり1ファイル）
+      - 始めのログファイルのサイズは4GB または 8GBに設定し、始めの量だけ繰り返して希望のサイズに達することができます
+      - 複数のTempDBデータファイルを使用し、すべて同じサイズです。
+      - 利用可能なハイパーバイザーのネットワークコントロールの機構を使用します(例えば、VMware NIOC)
 
 
-Exploring the Provisioned DB Server
+プロビジョニングされたDBサーバの確認
 ++++++++++++++++++++++++++++++++++++
 
-#. In **Prism Element > Storage > Table > Volume Groups**, locate the **ERA_**\ *Initials*\ **_MSSQL2_\** VG and observe the layout on the **Virtual Disk** tab. <What does this tell us?>
+#. **Prism Element > Storage > Table > Volume Groups** にて、 **ERA_**\ *Initials*\ **_MSSQL2_\** ** をクリックし、 Virtual Disk タブ上のレイアウトを見ます。 <これは何を示しているのでしょうか？>
 
    .. figure:: images/23.png
 
-#. View the disk layout of your newly provisioned VM in Prism. <What are all of these disks and how is this different from the original VM we registered?>
+#. Prismで、あなたが新しくプロビジョニングしたVMのディスクレイアウトを見ます。 <全てのこれらのディスクは何で、登録したオリジナルのVMから異なりますか?>
 
    .. figure:: images/24.png
 
-#. In Prism, note the IP address of your *Initials*\ **-MSSQL2** VM and connect to it via RDP using the following credentials:
+#. Prismで、あなたの *Initials*\ **-MSSQL2** VM のIPアドレスをメモして、以下の認証情報でRDP経由でそれに接続ください。
 
    - **User Name** - NTNXLAB\\Administrator
    - **Password** - nutanix/4u
 
-#. Open **Start > Run > diskmgmt.msc** to view the in-guest disk layout. Right-click an unlabeled volume and select **Change Drive Letter and Paths** to view the path to which Era has mounted the volume. Note there are dedicated drives corresponding to SQL data and log locations, similar to the original SQL Server to which you manually applied best practices.
+#. **Start > Run > diskmgmt.msc** を開いて、in-guestのディスクレイアウトを見ます。ラベルのないボリュームを右クリックし、 **Change Drive Letter and Paths** を選択して、Eraがボリュームをマウントしたパスを見ます。あなたが手動でベストプラクティスを適用したオリジナルのSQL Serverと同じように、SQLのデータとログの位置に対応する占有ドライブがありますので確認ください。
 
    .. figure:: images/25.png
 
-Migrating Fiesta App Data
+Fiesta App データの移行
 +++++++++++++++++++++++++
 
-In this exercise you will import data directly into your database from a backup exported from another database. While this is a suitable method for migrating data, it potentially involved downtime for an application, or our database potentially not having the very latest data.
+この演習では、あなたは他のデータベースからエクスポートしたバックアップから、あなたのデータベースに直接データをインポートします。これはデータ移行の適切な方法ですが、アプリケーションのダウンタイムを伴う可能性があり、データベースは最新のデータを持っていない可能性があります。
 
-Another approach could involve adding your new Era database to an existing database cluster (AlwaysOn Availability Group) and having it replicate to your Era provisioned database. Application level synchronous or asynchronous replication (such as SQL Server AAG or Oracle RAC) can be used to provide Era benefits like cloning and Time Machine to databases whose production instances run on bare metal or non-Nutanix infrastructure.
+他のアプローチでは、あなたの新しいデータベースを既存のデータベースクラスタ(AlwaysOn Availability Group)に加えることになり、あなたのEraでプロビジョニングしたデータベースにレプリケーションします。アプリケーションレベルの同期または非同期のレプリケーション(SQL Server AAGやOracle RACなど)は、クローニングとタイムマシンのようなEraのメリットを、業務のインスタンスがベアメタルまたはNutanixでないインフラ上で稼働するデータベースに提供します。
 
-#. From your *Initials*\ **-MSSQL2** RDP session, launch **Microsoft SQL Server Management Studio** and click **Connect** to authenticate as the currently logged in user.
+#. あなたの *Initials*\ **-MSSQL2** のRDPのセッションから、 **Microsoft SQL Server Management Studio** を起動し、 **Connect** をクリックし、現在のログインユーザとして認証します。
 
    .. figure:: images/26.png
 
-#. Expand the *Initials*\ **-fiesta** database and note that it contains no tables. With the database selected, click **New Query** from the menu to import your production application data.
+#. *Initials*\ **-fiesta** を開いて、テーブルが含まれていないことを確認します。データベースを選択して、メニューから **New Query** をクリックし、あなたの業務用アプリケーションデータをインポートします。
 
    .. figure:: images/27.png
 
-#. Copy and paste the following script into the query editor and click **Execute**:
+#. 以下のスクリプトをquery editorにコピー&ペーストし、 **Execute** をクリックします。
 
    .. literalinclude:: FiestaDB-MSSQL.sql
      :caption: FiestaDB Data Import Script
@@ -151,9 +151,9 @@ Another approach could involve adding your new Era database to an existing datab
 
    .. figure:: images/28.png
 
-#. Note the status bar should read **Query executed successfully**.
+#. ステータスバーで **Query executed successfully** が表示されていることを確認します。
 
-#. You can view the contents of the database by clicking **New Query** and executing the following:
+#. **New Query** をクリックし以下を実行して、データベースの内容を見ます。
 
    .. code-block:: sql
 
@@ -163,34 +163,34 @@ Another approach could involve adding your new Era database to an existing datab
 
    .. figure:: images/29.png
 
-#. In **Era > Time Machines**, select your *initials*\ **-fiesta_TM** Time Machine. Select **Actions > Log Catch Up > Yes** to ensure the imported data has been flushed to disk prior to the cloning operation in the next lab.
+#. **Era > Time Machines** で、あなたの *initials*\ **-fiesta_TM** Time Machineを選択します。 **Actions > Log Catch Up > Yes** を選択して、次のラボでクローン操作する前に、インポートされたデータがディスクにフラッシュされたか確認します。
 
-Provision Fiesta Web Tier
+Fiesta Web 層のプロビジョニング
 +++++++++++++++++++++++++
 
-Manipulating data using **SQL Server Management Studio** is boring. In this section you'll deploy the web tier of the application and connect it to your production database.
+**SQL Server Management Studio** でのデータの操作はたいくつです。このセクションでは、アプリケーションのWeb層をデプロイし、あなたの業務用のデータベースに接続します。
 
-#. `Download the Fiesta Blueprint by right-clicking here <https://raw.githubusercontent.com/nutanixworkshops/EraWithMSSQL_Bootcamp-Japanese/master/deploy_mssql_era/FiestaNoDB.json>`_. This single-VM Blueprint is used to provision only the web tier portion of the application.
+#. `ここを右クリックしてFiesta Blueprintをダウンロードします。 <https://raw.githubusercontent.com/nutanixworkshops/EraWithMSSQL_Bootcamp-Japanese/master/deploy_mssql_era/FiestaNoDB.json>`_ このシングルVMのBlueprintはアプリケーションのWeb層の部分のみをプロビジョニングするのに用いられます。
 
-#. From **Prism Central > Calm**, select **Blueprints** from the lefthand menu and click **Upload Blueprint**.
+#. **Prism Central > Calm** から、左側メニューの **Blueprints** を選択し、 **Upload Blueprint** をクリックします。
 
    .. figure:: images/30.png
 
-#. Select **FiestaNoDB.json**.
+#. **FiestaNoDB.json** を選択します。
 
-#. Update the **Blueprint Name** to include your initials. Even across different projects, Calm Blueprint names must be unique.
+#. **Blueprint Name** を更新してあなたのイニシャルを含めてください。異なるプロジェクトで、Calm Blueprint名は重複しないようにする必要があります。
 
-#. Select *Initials*\ -Project as the Calm project and click **Upload**.
+#. *Initials*\ -Project をCalmプロジェクトとして選択し、 **Upload** をクリックします。
 
    .. figure:: images/31.png
 
-#. In order to launch the Blueprint you must first assign a network to the VM. Select the **NodeReact** Service, and in the **VM** Configuration menu on the right, select **Secondary** as the **NIC 1** network.
+#. Blueprintを起動するために、あなたはまずネットワークをVMに割り当てる必要があります。 **NodeReact** サービスを選択し、右側の **VM** Configuration メニューで、 **Secondary** を **NIC 1** のネットワークとして選択します。
 
    .. figure:: images/32a.png
 
-#. Click **Credentials** to define a private key used to authenticate to the CentOS VM that will be provisioned by the Blueprint.
+#. **Credentials** をクリックし、BlueprintによってプロビジョニングされるCentOS VMへの認証に使用される秘密鍵を定義します。
 
-#. Expand the **CENTOS** credential and use your preferred SSH key, or paste in the following value as the **SSH Private Key**:
+#. **CENTOS** credentialを開いて、あなたの希望するSSHの鍵を使用します。または、以下の値を **SSH Private Key** としてペーストください。
 
    ::
 
@@ -224,43 +224,43 @@ Manipulating data using **SQL Server Management Studio** is boring. In this sect
 
    .. figure:: images/33.png
 
-#. Click **Save** and click **Back** once the Blueprint has completed saving.
+#. **Save** をクリックし、Blueprintの保存が完了すると、 **Back** をクリックします。
 
-#. Click **Launch** and fill out the following fields:
+#. **Launch** をクリックし、以下のように入力します。
 
    - **Name of the Application** - *Initials*\ -Fiesta
    - **db_password** - nutanix/4u
-   - **db_name** - *Initials*\ -fiesta (as configured when you deployed through Era)
+   - **db_name** - *Initials*\ -fiesta (Eraでデプロイ時に設定したように)
    - **db_dialect** - mssql
    - **db_domain_name** - ntnxlab.local
    - **db_username** - Administrator
-   - **db_host_address** - The IP of your *Initials*\ **-MSSQL2** VM
+   - **db_host_address** - あなたの *Initials*\ **-MSSQL2** VM のIP
 
    .. figure:: images/34.png
 
-#. Click **Create**.
+#. **Create** をクリックします。
 
-#. Select the **Audit** tab to monitor the deployment. This process should take < 5 minutes.
+#. **Audit** タブを選択し、デプロイをモニタします。このプロセスは5分以下です。
 
    .. figure:: images/35.png
 
-#. Once the application status changes to **Running**, select the **Services** tab and select the **NodeReact** service to obtain the **IP Address** of your web server.
+#. アプリケーションのステータスが **Running** に変わると、 **Services** タブを選択し、 **NodeReact** サービスを選択してあなたのウェブサーバーの **IP Address** を得ます。
 
    .. figure:: images/36.png
 
-#. Open \http://*NODEREACT-IP-ADDRESS:5001*/ in a new browser tab to access the **Fiesta** application.
+#. 新しいブラウザタブで \http://*NODEREACT-IP-ADDRESS:5001*/ を開き、 **Fiesta** アプリケーションにアクセスします。
 
    .. figure:: images/37.png
 
-   Congratulations! You've completed the deployment of your production application.
+   おめでとうございます！あなたの業務のアプリケーションのデプロイが完了しました。
 
-Takeaways
+重要なポイント
 +++++++++
 
-What are the key things we learned in this lab?
+このラボで学んだ重要なことは何でしょうか。
 
-- Existing databases can be easily onboarded into Era, and turned into templates
-- Existing brownfield databases can also be registered with Era
-- Profiles allow administrators to provision resources based on published standards
-- Customizable recovery SLAs allow you to tune continuous, daily, and monthly RPO based on your app's requirements
-- Era provides One-click provisioning of multiple database engines, including automatic application of database best practices
+- 既存のデータベースを容易にEraに登録でき、テンプレートにすることができます。
+- 既存のブラウンフィールドデータベースをEraに登録することができます。
+- 標準化されたリソースプロファイルを用いて管理者はプロビジョニングできます。
+- カスタマイズできるリカバリSLAによって、あなたのアプリケーションの要件に従い、あなたは継続的、日次、月次のRPOをチューニングできる。
+- Eraは多くのデータベースエンジンの1クリックプロビジョニングを提供します。また、データベースのベストプラクティスも自動的に適用します。
